@@ -55,7 +55,7 @@ export const productsService = {
     return mapData(data);
   },
 
-  postOne: async (product: Omit<ProductSchema, 'storeId'>): Promise<any> => {
+  postOne: async (product: ProductSchema): Promise<any> => {
     const data = await addDoc(productInstanceRef, product);
 
     return {

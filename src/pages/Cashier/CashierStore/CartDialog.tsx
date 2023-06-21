@@ -85,8 +85,6 @@ const CartDialog: FC<CartDialogProps> = ({ selectedItems, onRemoveItem }) => {
       return counts;
     }, {} as { [key: string]: { count: number; item: BaseItemSchema } });
 
-    console.log('itemCounts: ', itemCounts);
-
     return (
       <>
         {Object.values(itemCounts).map(({ count, item }, index, array) => (

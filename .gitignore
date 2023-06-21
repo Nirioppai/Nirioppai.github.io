@@ -11,6 +11,8 @@ node_modules
 dist-ssr
 build
 *.local
+vite.config.ts
+vite.config
 
 # Editor directories and files
 .vscode/*
@@ -22,4 +24,4 @@ build
 *.njsproj
 *.sln
 *.sw?
-
+vite.config.ts

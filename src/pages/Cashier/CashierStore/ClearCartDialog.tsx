@@ -14,20 +14,18 @@ import {
 } from '@mui/material';
 
 interface ClearCartDialogProps {
-  selectedItems: {
-    products: any[];
-    services: any[];
-  };
+  // selectedItems: {
+  //   products: any[];
+  //   services: any[];
+  // };
   onClearCart: () => void; // Added a callback function prop
 }
 
 const ClearCartDialog: FC<ClearCartDialogProps> = ({
-  selectedItems,
+  // selectedItems,
   onClearCart,
 }) => {
   const [open, setOpen] = useState(false);
-
-  console.log('selectedItems', selectedItems);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -38,7 +36,6 @@ const ClearCartDialog: FC<ClearCartDialogProps> = ({
   };
 
   const handleClearCart = () => {
-    console.log('Clearing Cart');
     onClearCart(); // Trigger the parent's clear cart function
     handleClose();
   };

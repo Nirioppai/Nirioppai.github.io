@@ -44,8 +44,6 @@ const ChargeItems: FC<PropsWithChildren<ChargeItemsProps>> = ({
   });
 
   const handleButtonClick = useCallback(async () => {
-    console.log('selectedItems: ', selectedItems);
-
     // prepare invoice data
     const invoiceData = {
       storeId, // store ID from recoil state

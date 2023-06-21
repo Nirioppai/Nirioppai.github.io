@@ -44,11 +44,8 @@ const AddOwnerProductCategoryModal: FC<DialogProps> = ({
       {...rest}
     >
       <Grid container spacing={2} columns={16}>
-        <Grid item xs={8}>
+        <Grid item xs={16}>
           <BusinessOwnerProductCategoryModalForm />
-        </Grid>
-        <Grid item xs={8}>
-          OR
         </Grid>
       </Grid>
     </FormDialog>

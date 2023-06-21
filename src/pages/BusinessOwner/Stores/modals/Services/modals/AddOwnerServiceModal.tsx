@@ -44,11 +44,8 @@ const AddOwnerServiceModal: FC<DialogProps> = ({ onClose, ...rest }) => {
       {...rest}
     >
       <Grid container spacing={2} columns={16}>
-        <Grid item xs={8}>
+        <Grid item xs={16}>
           <BusinessOwnerServiceModalForm />
-        </Grid>
-        <Grid item xs={8}>
-          OR
         </Grid>
       </Grid>
     </FormDialog>

@@ -62,8 +62,6 @@ const StoreItemsGrid: FC<PropsWithChildren<StoreItemsGridProps>> = ({
     });
   };
 
-  console.log('selectedItems: ', selectedItems);
-
   return (
     <>
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
@@ -86,7 +84,7 @@ const StoreItemsGrid: FC<PropsWithChildren<StoreItemsGridProps>> = ({
           </Grid>
           <Grid>
             <ClearCartDialog
-              selectedItems={selectedItems}
+              // selectedItems={selectedItems}
               onClearCart={handleClearCart}
             />
           </Grid>

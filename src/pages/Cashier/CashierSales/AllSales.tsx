@@ -22,7 +22,7 @@ const AllSales: FC<PropsWithChildren<AllSalesItemsGridProps>> = ({
     storeId
       ? [
           {
-            queryKey: [KEYS.invoices, storeId],
+            queryKey: [KEYS.invoices, storeId, 'all'],
             queryFn: () => invoiceService.getInvoices(storeId),
           },
         ]
@@ -32,12 +32,13 @@ const AllSales: FC<PropsWithChildren<AllSalesItemsGridProps>> = ({
   // @ts-ignore
   const invoices = queries[0]?.data || [];
 
+  console.log(invoices);
+
   // @ts-ignore
   const isLoading = queries.some((q) => q.isLoading);
   // @ts-ignore
   const isError = queries.some((q) => q.isError);
 
-  console.log(disableWrite);
   return (
     <>
       <DynamicAgGrid
@@ -54,18 +55,29 @@ const AllSales: FC<PropsWithChildren<AllSalesItemsGridProps>> = ({
               data.customerName ? data.customerName : 'N/A',
           },
           {
-            field: 'customerContact',
-            headerName: 'Customer Contact Details',
+            field: 'totalAmount',
+            headerName: 'Total Amount',
+            valueGetter: ({ data }) => 'PHP ' + data.totalAmount,
+            maxWidth: 150,
+          },
+          {
+            field: 'totalAmount',
+            headerName: 'Number of Items',
             valueGetter: ({ data }) =>
-              data.customerContact ? data.customerContact : 'N/A',
-            minWidth: 150,
+              (data?.serviceSale?.services
+                ? data?.serviceSale?.services.length
+                : 0) +
+              (data?.productSale?.products
+                ? data?.productSale?.products.length
+                : 0),
+            maxWidth: 170,
           },
           {
             field: 'paymentType',
             headerName: 'Payment Type',
             valueGetter: ({ data }) =>
               data.paymentType ? data.paymentType : 'N/A',
-            minWidth: 150,
+            maxWidth: 160,
           },
           {
             field: 'productSaleId',
@@ -92,6 +104,7 @@ const AllSales: FC<PropsWithChildren<AllSalesItemsGridProps>> = ({
           add: disableWrite,
           edit: disableWrite,
           archive: disableWrite,
+          view: !disableWrite,
         }}
       />
     </>

@@ -37,7 +37,6 @@ const ServiceSales: FC<PropsWithChildren<ServiceSalesProps>> = ({
   // @ts-ignore
   const isError = queries.some((q) => q.isError);
 
-  console.log(disableWrite);
   return (
     <>
       <DynamicAgGrid
