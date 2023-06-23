@@ -27,7 +27,6 @@ const AddOwnerCashierModal: FC<DialogProps> = ({ onClose, ...rest }) => {
       title='Add Cashier'
       maxWidth={'md'}
       defaultValues={{
-        name: '',
         ownerId: auth?.currentUser?.uid,
         storeId: storeId,
       }}

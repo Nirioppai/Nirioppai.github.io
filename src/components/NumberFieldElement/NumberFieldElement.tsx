@@ -12,6 +12,7 @@ type NumberFieldElementProps = Omit<TextFieldProps, 'name'> & {
   name: string;
   parseError?: (error: FieldError) => string;
   control?: Control<any>;
+  fieldType?: 'integer' | 'float';
 };
 
 const NumberFieldElement = ({
@@ -20,6 +21,7 @@ const NumberFieldElement = ({
   required,
   name,
   control,
+  fieldType = 'float',
   ...rest
 }: NumberFieldElementProps) => {
   if (required) {
@@ -40,9 +42,12 @@ const NumberFieldElement = ({
           value={value || ''}
           onChange={(e) => {
             onChange(
-              Number.isInteger(rest?.inputProps?.step || 1)
+              fieldType === 'integer' &&
+                Number.isInteger(rest?.inputProps?.step || 1)
                 ? parseInt(e.target.value, 10)
-                : parseFloat(e.target.value)
+                : fieldType === 'float'
+                ? parseFloat(e.target.value)
+                : null
             );
           }}
           onBlur={onBlur}

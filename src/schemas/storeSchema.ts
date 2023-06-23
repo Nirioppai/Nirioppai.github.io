@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const storeSchema = z.object({
   ownerId: z.string(),
   name: z.string(),
-  address: z.string(),
+  address: z.string().optional(),
   // Array of IDs
   products: z.string().array().optional(),
   services: z.string().array().optional(),

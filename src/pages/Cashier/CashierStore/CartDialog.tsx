@@ -6,7 +6,7 @@ import {
 } from '@mui/icons-material';
 import {
   AppBar,
-  Button,
+  // Button,
   Container,
   Dialog,
   Divider,
@@ -232,11 +232,11 @@ const CartDialog: FC<CartDialogProps> = ({ selectedItems, onRemoveItem }) => {
                 )}
               </Section>
 
-              <Button variant='contained' fullWidth sx={{ mt: '6px' }}>
+              {/* <Button variant='contained' fullWidth sx={{ mt: '6px' }}>
                 Charge Transaction
                 <br />
                 0.00
-              </Button>
+              </Button> */}
             </>
           ) : (
             ''

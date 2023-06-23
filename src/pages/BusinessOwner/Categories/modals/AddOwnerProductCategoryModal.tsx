@@ -28,7 +28,6 @@ const AddOwnerProductCategoryModal: FC<DialogProps> = ({
       title='Add Product Category'
       defaultValues={{
         ownerId: auth?.currentUser?.uid,
-        name: '',
       }}
       schema={productCategorySchema}
       onFormSubmit={onSubmit}

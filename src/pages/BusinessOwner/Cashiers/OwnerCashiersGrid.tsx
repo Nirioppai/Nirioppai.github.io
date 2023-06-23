@@ -50,6 +50,7 @@ const OwnerCashiersGrid: FC<PropsWithChildren<{ disableWrite?: boolean }>> = ({
             headerName: 'Name',
             sort: 'asc',
             minWidth: 200,
+            maxWidth: 300,
             cellStyle: { fontWeight: 500 },
           },
           {

@@ -54,6 +54,17 @@ export const servicesService = {
     const data = await getDocs(q);
     return mapData(data);
   },
+  getCashierServicesInStore: async (storeId: string): Promise<any> => {
+    const q = query(
+      serviceInstanceRef,
+      where('storesAssigned', 'array-contains', storeId),
+      where('availability', '==', 'Available')
+      // orderBy('timestamp', 'desc')
+    );
+
+    const data = await getDocs(q);
+    return mapData(data);
+  },
   postOne: async (service: ServiceSchema): Promise<any> => {
     const data = await addDoc(serviceInstanceRef, service);
 

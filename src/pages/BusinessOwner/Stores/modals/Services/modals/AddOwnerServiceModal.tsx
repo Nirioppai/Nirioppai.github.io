@@ -29,11 +29,8 @@ const AddOwnerServiceModal: FC<DialogProps> = ({ onClose, ...rest }) => {
       maxWidth={'md'}
       defaultValues={{
         ownerId: auth?.currentUser?.uid,
-        name: '',
-        price: 0,
-        description: '',
-        availability: 'Available',
         category: '',
+        availability: 'Available',
         // @ts-ignore
         storeId: storeId,
       }}

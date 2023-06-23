@@ -24,11 +24,8 @@ const AddOwnerServiceModal: FC<DialogProps> = ({ onClose, ...rest }) => {
       title='Add Service'
       defaultValues={{
         ownerId: auth?.currentUser?.uid,
-        name: '',
-        price: 0,
-        description: '',
-        availability: 'Available',
         category: '',
+        availability: 'Available',
       }}
       schema={serviceSchema}
       onFormSubmit={onSubmit}

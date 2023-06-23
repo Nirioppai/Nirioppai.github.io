@@ -33,7 +33,6 @@ const AddOwnerProductCategoryModal: FC<DialogProps> = ({
       maxWidth={'md'}
       defaultValues={{
         ownerId: auth?.currentUser?.uid,
-        name: '',
         // @ts-ignore
         storeId: storeId,
       }}

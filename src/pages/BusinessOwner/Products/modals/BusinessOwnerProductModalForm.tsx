@@ -7,7 +7,7 @@ const BusinessOwnerProductModalForm = () => (
     <TextFieldElement name='name' label='Product Name' required />
     <NumberFieldElement name='price' label='Price' required />
     <TextFieldElement name='description' label='Description' />
-    <NumberFieldElement name='stock' label='Stock' />
+    <NumberFieldElement name='stock' label='Stock' fieldType='integer' />
     <SelectDropdownElement
       name='availability'
       label='Availability'

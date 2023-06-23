@@ -23,7 +23,6 @@ const AddOwnerCashierModal: FC<DialogProps> = ({ onClose, ...rest }) => {
     <FormDialog
       title='Add Cashier'
       defaultValues={{
-        name: '',
         ownerId: auth?.currentUser?.uid,
       }}
       schema={cashierSchema.omit({ email: true })}

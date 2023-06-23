@@ -28,10 +28,13 @@ const AddExistingProductModal: FC<DialogProps> = ({ onClose, ...rest }) => {
   const allProducts = queries[0].data || [];
   const storeProducts = queries[1].data || [];
 
+  console.log(allProducts);
+  console.log(storeProducts);
+
   useEffect(() => {
     queries.forEach((q) => q.refetch());
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [allProducts]);
 
   function getUnassignedProducts(
     storeProducts: ProductSchema,
@@ -69,6 +72,7 @@ const AddExistingProductModal: FC<DialogProps> = ({ onClose, ...rest }) => {
         description: '',
         availability: 'Available',
         category: '',
+        stock: 0,
         // @ts-ignore
         storeId: storeId,
       }}

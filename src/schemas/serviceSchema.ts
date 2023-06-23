@@ -7,7 +7,7 @@ export const serviceSchema = z.object({
   availability: z.string(),
   storesAssigned: z.array(z.string()).optional(),
   name: z.string(),
-  description: z.string(),
+  description: z.string().optional(),
   ownerId: z.string().optional(),
   storeId: z.string().optional(),
   // Duration

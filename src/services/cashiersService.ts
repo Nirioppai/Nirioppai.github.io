@@ -212,9 +212,33 @@ export const cashiersService = {
     const storeId = cashier.storeId;
 
     // @ts-ignore
-    createCashier(storeId, cashier.name, cashier.password);
+    const randomNumber = generateFourRandomNumbers();
 
-    const data = await addDoc(cashierInstanceRef, cashier);
+    const newCashierUser = await createCashier(
+      // @ts-ignore
+      storeId,
+      cashier.name,
+      cashier.password,
+      randomNumber
+    );
+
+    // @ts-ignore
+    const docRef = doc(db2, storeInstanceKey, cashier.storeId);
+    const docSnap = await getDoc(docRef);
+    const docData = docSnap.data() || '';
+
+    const newCashier = {
+      name: cashier.name,
+      ownerId: cashier.ownerId,
+      // @ts-ignore
+      email: `${docData.name.split(' ').join('')}${removeSpaces(
+        cashier.name
+      )}${randomNumber}@gmail.com`,
+      password: cashier.password,
+      storeId: cashier.storeId,
+    };
+
+    const data = await addDoc(cashierInstanceRef, newCashier);
 
     // @ts-ignore
     const storeRef = doc(db2, storeInstanceKey, storeId);
@@ -222,6 +246,8 @@ export const cashiersService = {
     // Update cashier stores array and insert ID of newly created cashier
     await updateDoc(storeRef, { cashiers: arrayUnion(data.id) });
     await updateDoc(cashierRef, {
+      // @ts-ignore
+      cashierId: newCashierUser.uid,
       storesAssigned: arrayUnion(storeId),
     });
 
@@ -230,7 +256,7 @@ export const cashiersService = {
     return {
       // @ts-ignore
       _id: data.id,
-      ...cashier,
+      ...newCashier,
     };
   },
   archiveOne: async (storeId: string): Promise<any> => {

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import {
@@ -29,6 +29,7 @@ interface AddCustomerProps {
   title: string;
   subtitle: string;
   setSelectedItems: (customerDetails: CustomerDetails) => void; // This function will be passed down from the parent component
+  selectedItems: any;
 }
 
 const AddCustomer: React.FC<AddCustomerProps> = ({
@@ -36,6 +37,7 @@ const AddCustomer: React.FC<AddCustomerProps> = ({
   title,
   subtitle,
   setSelectedItems,
+  selectedItems,
 }) => {
   const [open, setOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,6 +45,21 @@ const AddCustomer: React.FC<AddCustomerProps> = ({
   const [customerContact, setCustomerContact] = useState('');
   const [customerAddress, setCustomerAddress] = useState('');
   const [paymentType, setPaymentType] = useState('Cash');
+
+  // Reset internal state when the selectedItems prop changes
+  useEffect(() => {
+    if (
+      selectedItems.customerName === '' &&
+      selectedItems.customerContact === '' &&
+      selectedItems.customerAddress === '' &&
+      selectedItems.paymentType === ''
+    ) {
+      setCustomerName('');
+      setCustomerContact('');
+      setCustomerAddress('');
+      setPaymentType('Cash');
+    }
+  }, [selectedItems]);
 
   const handleClose = useCallback((reason: any) => {
     if (reason === 'backdropClick') {
@@ -53,7 +70,6 @@ const AddCustomer: React.FC<AddCustomerProps> = ({
 
   const onSubmit = () => {
     setIsSubmitting(true);
-
     // Pass the customer details back to the parent component
     setSelectedItems({
       customerName,

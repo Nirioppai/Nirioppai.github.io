@@ -79,6 +79,7 @@ const StoreItemsGrid: FC<PropsWithChildren<StoreItemsGridProps>> = ({
               maxWidth={'md'}
               title='Add Customer'
               subtitle='Add Customer Details'
+              selectedItems={selectedItems}
               setSelectedItems={(customerDetails) =>
                 setSelectedItems({ ...selectedItems, ...customerDetails })
               }

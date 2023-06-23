@@ -47,6 +47,7 @@ const StoreCashierGrid: FC<StoreCashiersGridProps> = ({
             headerName: 'Name',
             sort: 'asc',
             minWidth: 200,
+            maxWidth: 300,
             cellStyle: { fontWeight: 500 },
           },
           {

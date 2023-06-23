@@ -24,7 +24,7 @@ const ProductsList: FC<PropsWithChildren<ProductsListProps>> = ({
   const queries = useQueries([
     {
       queryKey: [KEYS.products, storeId],
-      queryFn: () => productsService.getProductsInStore(storeId),
+      queryFn: () => productsService.getCashierProductsInStore(storeId),
     },
   ]);
 

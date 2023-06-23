@@ -63,6 +63,7 @@ const ChargeItems: FC<PropsWithChildren<ChargeItemsProps>> = ({
     // submit invoice
     await createInvoice(invoiceData);
 
+    // clear selected items and customer data
     clearSelectedItems();
   }, [selectedItems, clearSelectedItems, storeId, createInvoice, totalAmount]);
 
