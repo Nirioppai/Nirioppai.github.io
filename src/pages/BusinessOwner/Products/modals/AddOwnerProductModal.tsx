@@ -28,6 +28,7 @@ const AddOwnerProductModal: FC<DialogProps> = ({ onClose, ...rest }) => {
         price: 0,
         description: '',
         availability: 'Available',
+        stock: 0,
         category: '',
       }}
       schema={productSchema}

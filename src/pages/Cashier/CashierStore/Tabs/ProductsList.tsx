@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useEffect } from 'react';
 
 import { useQueries } from 'react-query';
 import { getRecoil } from 'recoil-nexus';
@@ -11,25 +11,22 @@ import { productsService } from '~/services';
 interface ProductsListProps {
   disableWrite?: boolean;
   handleProductClick?: any;
+  selectedItems?: any;
 }
 
 const ProductsList: FC<PropsWithChildren<ProductsListProps>> = ({
   disableWrite,
   handleProductClick,
+  selectedItems,
 }) => {
   const storeId = getRecoil(cashierSelectedStore);
 
-  const queries = useQueries(
-    // @ts-ignore
-    storeId
-      ? [
-          {
-            queryKey: [KEYS.products, storeId],
-            queryFn: () => productsService.getProductsInStore(storeId),
-          },
-        ]
-      : []
-  );
+  const queries = useQueries([
+    {
+      queryKey: [KEYS.products, storeId],
+      queryFn: () => productsService.getProductsInStore(storeId),
+    },
+  ]);
 
   // @ts-ignore
   const products = queries[0]?.data || [];
@@ -38,6 +35,11 @@ const ProductsList: FC<PropsWithChildren<ProductsListProps>> = ({
   const isLoading = queries.some((q) => q.isLoading);
   // @ts-ignore
   const isError = queries.some((q) => q.isError);
+
+  useEffect(() => {
+    queries.forEach((q) => q.refetch());
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedItems]);
 
   return (
     <>
@@ -58,7 +60,12 @@ const ProductsList: FC<PropsWithChildren<ProductsListProps>> = ({
 
             minWidth: 100,
           },
+          {
+            field: 'stock',
+            headerName: 'Stock',
 
+            minWidth: 100,
+          },
           {
             field: 'description',
             headerName: 'Description',

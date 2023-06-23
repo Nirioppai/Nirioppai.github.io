@@ -56,6 +56,12 @@ const OwnerProductsGrid: FC<PropsWithChildren<{ disableWrite?: boolean }>> = ({
 
             minWidth: 100,
           },
+          {
+            field: 'stock',
+            headerName: 'Stock',
+
+            minWidth: 100,
+          },
 
           {
             field: 'description',

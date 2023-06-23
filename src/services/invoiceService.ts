@@ -7,6 +7,7 @@ import {
   getDocs,
   query,
   setDoc,
+  updateDoc,
   where,
 } from 'firebase/firestore';
 
@@ -87,6 +88,32 @@ export const invoiceService = {
   postOne: async (invoice: any): Promise<any> => {
     const { orderDetails, ...invoiceData } = invoice;
 
+    // Calculate product quantities in the invoice
+    const invoiceProductQuantities = orderDetails.products.reduce(
+      (acc: any, product: any) => {
+        acc[product._id] = (acc[product._id] || 0) + 1;
+        return acc;
+      },
+      {}
+    );
+
+    // Check if any product in the invoice exceeds available stock
+    for (const productId in invoiceProductQuantities) {
+      const productRef = doc(db, KEYS.products, productId);
+      const productSnapshot = await getDoc(productRef);
+
+      if (!productSnapshot.exists()) {
+        throw new Error(`Product with ID ${productId} does not exist.`);
+      }
+
+      const productData = productSnapshot.data();
+      if (productData.stock < invoiceProductQuantities[productId]) {
+        throw new Error(
+          `Insufficient stock for the product ${productData.name}.`
+        );
+      }
+    }
+
     // Initialize invoiceData's iterationCount to 1
     invoiceData.iterationCount = 1;
 
@@ -113,6 +140,8 @@ export const invoiceService = {
       iterationCount: 1,
     };
 
+    // update so that product quantity would get subtracted here regarding how many products were inside the orderDetails
+
     let serviceSaleRef, productSaleRef;
 
     if (serviceSaleData.services.length > 0) {
@@ -129,6 +158,44 @@ export const invoiceService = {
         collection(db, KEYS.productSales),
         productSaleData
       );
+
+      // Update the stock of each product
+      // Group the products by their _id and calculate the quantities sold
+      const quantities = productSaleData.products.reduce(
+        (acc: any, product: any) => {
+          acc[product._id] = {
+            quantity: (acc[product._id]?.quantity || 0) + 1,
+            name: product.name,
+          };
+          return acc;
+        },
+        {}
+      );
+
+      // Loop through the quantities object
+      for (const productId in quantities) {
+        const productRef = doc(db, KEYS.products, productId);
+        const productSnapshot = await getDoc(productRef);
+
+        if (productSnapshot.exists()) {
+          const productData = productSnapshot.data();
+
+          if (productData.stock >= quantities[productId].quantity) {
+            await updateDoc(productRef, {
+              stock: productData.stock - quantities[productId].quantity,
+            });
+          } else {
+            throw new Error(
+              'Not enough stock for product: ' + quantities[productId].name
+            );
+          }
+        } else {
+          throw new Error(
+            'Product does not exist: ' + quantities[productId].name
+          );
+        }
+      }
+
       // Include the ID in the invoiceData
       invoiceData.productSaleId = productSaleRef.id;
     }

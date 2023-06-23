@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useEffect } from 'react';
 
 import { useQueries } from 'react-query';
 import { getRecoil } from 'recoil-nexus';
@@ -11,25 +11,22 @@ import { servicesService } from '~/services';
 interface ServicesListProps {
   disableWrite?: boolean;
   handleServiceClick?: any;
+  selectedItems?: any;
 }
 
 const ServicesList: FC<PropsWithChildren<ServicesListProps>> = ({
   disableWrite,
   handleServiceClick,
+  selectedItems,
 }) => {
   const storeId = getRecoil(cashierSelectedStore);
 
-  const queries = useQueries(
-    // @ts-ignore
-    storeId
-      ? [
-          {
-            queryKey: [KEYS.services, storeId],
-            queryFn: () => servicesService.getServicesInStore(storeId),
-          },
-        ]
-      : []
-  );
+  const queries = useQueries([
+    {
+      queryKey: [KEYS.services, storeId],
+      queryFn: () => servicesService.getServicesInStore(storeId),
+    },
+  ]);
 
   // @ts-ignore
   const services = queries[0]?.data || [];
@@ -38,6 +35,11 @@ const ServicesList: FC<PropsWithChildren<ServicesListProps>> = ({
   const isLoading = queries.some((q) => q.isLoading);
   // @ts-ignore
   const isError = queries.some((q) => q.isError);
+
+  useEffect(() => {
+    queries.forEach((q) => q.refetch());
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedItems]);
 
   return (
     <>

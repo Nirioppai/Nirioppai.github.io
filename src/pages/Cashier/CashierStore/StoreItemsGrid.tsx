@@ -30,6 +30,8 @@ const StoreItemsGrid: FC<PropsWithChildren<StoreItemsGridProps>> = ({
 }) => {
   const [selectedItems, setSelectedItems] = useState(initialItemsState);
 
+  console.log(selectedItems);
+
   const handleProductClick = (event: any) => {
     // @ts-ignore
     setSelectedItems((prevState) => {
@@ -104,6 +106,7 @@ const StoreItemsGrid: FC<PropsWithChildren<StoreItemsGridProps>> = ({
               <ProductsList
                 disableWrite={disableWrite}
                 handleProductClick={handleProductClick}
+                selectedItems={selectedItems}
               />
             ),
           },
@@ -113,6 +116,7 @@ const StoreItemsGrid: FC<PropsWithChildren<StoreItemsGridProps>> = ({
               <ServicesList
                 disableWrite={disableWrite}
                 handleServiceClick={handleServiceClick}
+                selectedItems={selectedItems}
               />
             ),
           },

@@ -55,7 +55,12 @@ const StoreProductsGrid: FC<StoreProductsGridProps> = ({
 
             minWidth: 100,
           },
+          {
+            field: 'stock',
+            headerName: 'Stock',
 
+            minWidth: 100,
+          },
           {
             field: 'description',
             headerName: 'Description',

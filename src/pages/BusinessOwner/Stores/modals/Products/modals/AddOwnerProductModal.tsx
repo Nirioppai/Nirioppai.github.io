@@ -71,6 +71,7 @@ const AddOwnerProductModal: FC<DialogProps> = ({ onClose, ...rest }) => {
         description: '',
         availability: 'Available',
         category: '',
+        stock: 0,
         // @ts-ignore
         storeId: storeId,
       }}
