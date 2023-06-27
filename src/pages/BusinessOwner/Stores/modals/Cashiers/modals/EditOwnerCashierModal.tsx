@@ -17,8 +17,8 @@ const EditOwnerCashierModal: FC<
   }
 > = ({ data, setData, onClose, ...rest }) => {
   const { mutateAsync } = usePutMutation({
-    queryKey: KEYS.cashiers,
-    mutationFn: cashiersService2.putOne,
+    queryKey: [KEYS.cashiers, 'Store Cashiers'],
+    mutationFn: cashiersService2.putOneCashier,
   });
 
   const { _id, ...defaultValues } = data;

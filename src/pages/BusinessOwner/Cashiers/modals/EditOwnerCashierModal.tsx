@@ -18,7 +18,7 @@ const EditOwnerCashierModal: FC<
 > = ({ data, setData, onClose, ...rest }) => {
   const { mutateAsync } = usePutMutation({
     queryKey: KEYS.cashiers,
-    mutationFn: cashiersService2.putOne,
+    mutationFn: cashiersService2.putOneCashier,
   });
 
   const { _id, ...defaultValues } = data;
@@ -28,7 +28,7 @@ const EditOwnerCashierModal: FC<
 
   return (
     <FormDialog
-      title='Edit Equipment'
+      title='Edit Cashier'
       subtitle={data.name}
       defaultValues={defaultValues}
       schema={cashierSchema}

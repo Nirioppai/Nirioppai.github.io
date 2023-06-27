@@ -58,8 +58,30 @@ export const AuthContextProvider = ({ children }) => {
     }
   };
 
-  const signIn = (email: string, password: string) => {
-    return signInWithEmailAndPassword(auth, email, password);
+  const signIn = async (email: string, password: string) => {
+    try {
+      return await signInWithEmailAndPassword(auth, email, password);
+    } catch (err: any) {
+      let customMessage = '';
+      switch (err.code) {
+        case 'auth/invalid-email':
+          customMessage = 'Invalid email format.';
+          break;
+        case 'auth/user-disabled':
+          customMessage = 'This user has been disabled.';
+          break;
+        case 'auth/user-not-found':
+          customMessage = 'Incorrect credentials.';
+          break;
+        case 'auth/wrong-password':
+          customMessage = 'Incorrect credentials.';
+          break;
+        default:
+          customMessage = 'Login failed. Please try again.';
+          break;
+      }
+      throw new Error(customMessage);
+    }
   };
 
   const googleSignIn = async (userType: string) => {

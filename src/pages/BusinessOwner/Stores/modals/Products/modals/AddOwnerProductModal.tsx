@@ -1,6 +1,7 @@
 import { FC, useEffect } from 'react';
 
 import type { DialogProps } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { useQueries } from 'react-query';
 import { getRecoil } from 'recoil-nexus';
 
@@ -12,8 +13,11 @@ import { KEYS } from '~/constants';
 import { usePostMutation } from '~/hooks';
 import { ProductSchema, productSchema } from '~/schemas';
 import { productsService } from '~/services';
+import { validateSubmit } from '~/utils';
 
 const AddOwnerProductModal: FC<DialogProps> = ({ onClose, ...rest }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const storeId = getRecoil(selectedStore);
 
   const queries = useQueries([
@@ -27,39 +31,19 @@ const AddOwnerProductModal: FC<DialogProps> = ({ onClose, ...rest }) => {
     },
   ]);
 
-  // const allProducts = queries[0].data || [];
-  // const storeProducts = queries[1].data || [];
-
   useEffect(() => {
     queries.forEach((q) => q.refetch());
     //eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // function getUnassignedProducts(
-  //   storeProducts: ProductSchema,
-  //   allProducts: ProductSchema
-  // ) {
-  //   // @ts-ignore
-  //   const unassignedProducts = allProducts.filter((product: ProductSchema) => {
-  //     // @ts-ignore
-  //     return !storeProducts.some(
-  //       // @ts-ignore
-  //       (storeProduct) => storeProduct._id === product._id
-  //     );
-  //   });
-  //   return unassignedProducts;
-  // }
-
-  // const unassignedProducts = getUnassignedProducts(storeProducts, allProducts);
-
   const { mutateAsync } = usePostMutation({
-    queryKey: KEYS.products,
+    queryKey: [KEYS.products, 'Store Products'],
     mutationFn: productsService.postOneInsideStore,
   });
 
-  const onSubmit = async (values: ProductSchema) => {
-    await mutateAsync(values);
-  };
+  const onSubmit = (values: ProductSchema) =>
+    // @ts-ignore
+    validateSubmit(values, productSchema, mutateAsync, enqueueSnackbar);
 
   return (
     <FormDialog
@@ -67,6 +51,8 @@ const AddOwnerProductModal: FC<DialogProps> = ({ onClose, ...rest }) => {
       defaultValues={{
         ownerId: auth?.currentUser?.uid,
         category: '',
+        description: '',
+        stock: 0,
         availability: 'Available',
         // @ts-ignore
         storeId: storeId,

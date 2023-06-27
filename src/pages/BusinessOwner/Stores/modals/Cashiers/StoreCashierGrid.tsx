@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 
 import { useQueries } from 'react-query';
 
@@ -19,7 +19,7 @@ const StoreCashierGrid: FC<StoreCashiersGridProps> = ({
 }) => {
   const queries = useQueries([
     {
-      queryKey: KEYS.cashiers,
+      queryKey: [KEYS.cashiers, 'Store Cashiers'],
       queryFn: () => cashiersService.getCashiersInStore(storeId || ''),
     },
   ]);
@@ -31,11 +31,6 @@ const StoreCashierGrid: FC<StoreCashiersGridProps> = ({
 
   // @ts-ignore
   const isError = queries.some((q) => q.isError);
-
-  useEffect(() => {
-    queries.forEach((q) => q.refetch());
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <>
@@ -59,6 +54,11 @@ const StoreCashierGrid: FC<StoreCashiersGridProps> = ({
             field: 'password',
             headerName: 'Password',
             minWidth: 200,
+            valueFormatter: (params) => '*'.repeat(params.value.length),
+            headerTooltip:
+              'Password is hidden for security reasons. Click on Edit to view.',
+            tooltipValueGetter: () =>
+              'Password is hidden for security reasons. Click on Edit to view.',
           },
         ]}
         isLoading={isLoading}

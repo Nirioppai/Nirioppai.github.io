@@ -21,7 +21,7 @@ const EditOwnerProductCategoryModal: FC<
   }
 > = ({ data, setData, onClose, ...rest }) => {
   const { mutateAsync } = usePutMutation({
-    queryKey: KEYS.productCategories,
+    queryKey: [KEYS.productCategories, 'Store Product Categories'],
     mutationFn: categoriesService2.putOne,
   });
 

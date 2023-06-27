@@ -4,6 +4,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   // orderBy,
   query,
@@ -95,11 +96,13 @@ export const categoriesService = {
   ): Promise<any> => {
     const data = await addDoc(productCategoryInstanceRef, productCategory);
     const storeId = productCategory.storeId;
+
     // @ts-ignore
+
     const storeRef = doc(db, storeInstanceKey, storeId);
     const productCategoryRef = doc(db, productCategoryInstanceKey, data.id);
     // Update productCategory stores array and insert ID of newly created productCategory
-    await updateDoc(storeRef, { productCategories: arrayUnion(data.id) });
+    await updateDoc(storeRef, { productCategory: arrayUnion(data.id) });
     await updateDoc(productCategoryRef, {
       storesAssigned: arrayUnion(storeId),
     });
@@ -107,6 +110,44 @@ export const categoriesService = {
       // @ts-ignore
       _id: data.id,
       ...productCategory,
+    };
+  },
+
+  postOneExistingProductCategoryInsideStore: async (
+    productCategory: ProductCategorySchema
+  ): Promise<any> => {
+    const storeId = productCategory.storeId;
+
+    const docRef = doc(db, productCategoryInstanceKey, productCategory.name);
+    const docSnap = await getDoc(docRef);
+    const docData = docSnap.data() || '';
+
+    // @ts-ignore
+    const storeRef = doc(db, storeInstanceKey, storeId);
+    const productCategoryRef = doc(
+      db,
+      productCategoryInstanceKey,
+      productCategory.name
+    );
+
+    await updateDoc(storeRef, {
+      productCategory: arrayUnion(productCategory.name),
+    });
+    await updateDoc(productCategoryRef, {
+      storesAssigned: arrayUnion(storeId),
+    });
+
+    return {
+      // @ts-ignore
+      _id: productCategory.name,
+      // @ts-ignore
+      storeId: docData.storeId,
+      // @ts-ignore
+      name: docData.name,
+      // @ts-ignore
+      storesAssigned: docData.storesAssigned,
+      // @ts-ignore
+      ownerId: docData.ownerId,
     };
   },
   postOneServiceCategory: async (

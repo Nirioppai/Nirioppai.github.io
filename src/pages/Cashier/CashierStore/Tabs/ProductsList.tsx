@@ -1,5 +1,11 @@
 import { FC, PropsWithChildren, useEffect } from 'react';
 
+import { Chip } from '@mui/material';
+import {
+  Alert as AlertIcon,
+  CheckBold as CheckBoldIcon,
+  Information as InformationIcon,
+} from 'mdi-material-ui';
 import { useQueries } from 'react-query';
 import { getRecoil } from 'recoil-nexus';
 
@@ -63,7 +69,38 @@ const ProductsList: FC<PropsWithChildren<ProductsListProps>> = ({
           {
             field: 'stock',
             headerName: 'Stock',
+            cellRenderer: (params: any) => {
+              const stockValue = params.data.stock;
+              let color = 'success';
+              let IconComponent = CheckBoldIcon;
 
+              if (stockValue < 10) {
+                color = 'error';
+                IconComponent = AlertIcon;
+              } else if (stockValue < 20) {
+                color = 'warning';
+                IconComponent = InformationIcon;
+              }
+
+              return (
+                <div>
+                  <Chip
+                    icon={<IconComponent />}
+                    // @ts-ignore
+                    color={color}
+                    size='small'
+                    variant='filled'
+                    label={stockValue}
+                  />
+                </div>
+              );
+            },
+            tooltipValueGetter: (params: any) =>
+              params.data.stock < 10
+                ? 'Critically Low Stock.'
+                : params.data.stock < 20
+                ? 'Low Stock Levels.'
+                : 'Acceptable Stock Levels.',
             minWidth: 100,
           },
           {
@@ -75,6 +112,29 @@ const ProductsList: FC<PropsWithChildren<ProductsListProps>> = ({
           {
             field: 'availability',
             headerName: 'Availability',
+            cellRenderer: (params: any) => {
+              const availability = params.data.availability;
+
+              let color = 'success';
+              let IconComponent = CheckBoldIcon;
+
+              if (availability == 'Unavailable') {
+                color = 'error';
+                IconComponent = AlertIcon;
+              }
+              return (
+                <div>
+                  <Chip
+                    icon={<IconComponent />}
+                    // @ts-ignore
+                    color={color}
+                    size='small'
+                    variant='filled'
+                    label={availability}
+                  />
+                </div>
+              );
+            },
 
             minWidth: 250,
           },

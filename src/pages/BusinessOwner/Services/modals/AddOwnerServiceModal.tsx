@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import type { DialogProps } from '@mui/material';
+import { useSnackbar } from 'notistack';
 
 import BusinessOwnerServiceModalForm from './BusinessOwnerServiceModalForm';
 
@@ -10,14 +11,19 @@ import { KEYS } from '~/constants';
 import { usePostMutation } from '~/hooks';
 import { ServiceSchema, serviceSchema } from '~/schemas';
 import { servicesService } from '~/services';
+import { validateSubmit } from '~/utils';
 
 const AddOwnerServiceModal: FC<DialogProps> = ({ onClose, ...rest }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const { mutateAsync } = usePostMutation({
     queryKey: KEYS.services,
     mutationFn: servicesService.postOne,
   });
 
-  const onSubmit = async (values: ServiceSchema) => await mutateAsync(values);
+  const onSubmit = (values: ServiceSchema) =>
+    // @ts-ignore
+    validateSubmit(values, serviceSchema, mutateAsync, enqueueSnackbar);
 
   return (
     <FormDialog
@@ -25,6 +31,7 @@ const AddOwnerServiceModal: FC<DialogProps> = ({ onClose, ...rest }) => {
       defaultValues={{
         ownerId: auth?.currentUser?.uid,
         category: '',
+        description: '',
         availability: 'Available',
       }}
       schema={serviceSchema}

@@ -1,5 +1,10 @@
-import { FC, useEffect } from 'react';
+import { FC } from 'react';
 
+import { Chip } from '@mui/material';
+import {
+  Alert as AlertIcon,
+  CheckBold as CheckBoldIcon,
+} from 'mdi-material-ui';
 import { useQueries } from 'react-query';
 
 import { AddExistingServiceModal, AddOwnerServiceModal } from './modals';
@@ -19,7 +24,7 @@ const StoreServicesGrid: FC<StoreServicesGridProps> = ({
 }) => {
   const queries = useQueries([
     {
-      queryKey: KEYS.services,
+      queryKey: [KEYS.services, 'Store Services'],
       queryFn: () => servicesService.getServicesInStore(storeId || ''),
     },
   ]);
@@ -31,11 +36,6 @@ const StoreServicesGrid: FC<StoreServicesGridProps> = ({
 
   // @ts-ignore
   const isError = queries.some((q) => q.isError);
-
-  useEffect(() => {
-    queries.forEach((q) => q.refetch());
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <>
@@ -71,6 +71,29 @@ const StoreServicesGrid: FC<StoreServicesGridProps> = ({
           {
             field: 'availability',
             headerName: 'Availability',
+            cellRenderer: (params: any) => {
+              const availability = params.data.availability;
+
+              let color = 'success';
+              let IconComponent = CheckBoldIcon;
+
+              if (availability == 'Unavailable') {
+                color = 'error';
+                IconComponent = AlertIcon;
+              }
+              return (
+                <div>
+                  <Chip
+                    icon={<IconComponent />}
+                    // @ts-ignore
+                    color={color}
+                    size='small'
+                    variant='filled'
+                    label={availability}
+                  />
+                </div>
+              );
+            },
 
             minWidth: 250,
           },

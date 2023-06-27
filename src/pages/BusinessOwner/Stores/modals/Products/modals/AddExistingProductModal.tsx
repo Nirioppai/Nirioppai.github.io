@@ -1,6 +1,7 @@
 import { FC, useEffect } from 'react';
 
 import type { DialogProps } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { useQueries } from 'react-query';
 import { getRecoil } from 'recoil-nexus';
 
@@ -10,8 +11,11 @@ import { KEYS } from '~/constants';
 import { usePostMutation } from '~/hooks';
 import { ProductSchema, productSchema } from '~/schemas';
 import { productsService } from '~/services';
+import { validateSubmit } from '~/utils';
 
 const AddExistingProductModal: FC<DialogProps> = ({ onClose, ...rest }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const storeId = getRecoil(selectedStore);
 
   const queries = useQueries([
@@ -20,16 +24,13 @@ const AddExistingProductModal: FC<DialogProps> = ({ onClose, ...rest }) => {
       queryFn: () => productsService.getProducts(auth?.currentUser?.uid || ''),
     },
     {
-      queryKey: 'storeProducts',
+      queryKey: [KEYS.products, 'Store Products'],
       queryFn: () => productsService.getProductsInStore(storeId || ''),
     },
   ]);
 
   const allProducts = queries[0].data || [];
   const storeProducts = queries[1].data || [];
-
-  console.log(allProducts);
-  console.log(storeProducts);
 
   useEffect(() => {
     queries.forEach((q) => q.refetch());
@@ -58,9 +59,9 @@ const AddExistingProductModal: FC<DialogProps> = ({ onClose, ...rest }) => {
     mutationFn: productsService.postOneExistingProductInsideStore,
   });
 
-  const onSubmit = async (values: ProductSchema) => {
-    await mutateAsync(values);
-  };
+  const onSubmit = (values: ProductSchema) =>
+    // @ts-ignore
+    validateSubmit(values, productSchema, mutateAsync, enqueueSnackbar);
 
   return (
     <FormDialog

@@ -2,6 +2,7 @@ import { FC } from 'react';
 
 import type { DialogProps } from '@mui/material';
 import { Grid } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { getRecoil } from 'recoil-nexus';
 
 import BusinessOwnerServiceModalForm from './BusinessOwnerServiceModalForm';
@@ -12,24 +13,28 @@ import { KEYS } from '~/constants';
 import { usePostMutation } from '~/hooks';
 import { ServiceSchema, serviceSchema } from '~/schemas';
 import { servicesService } from '~/services';
+import { validateSubmit } from '~/utils';
 
 const AddOwnerServiceModal: FC<DialogProps> = ({ onClose, ...rest }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const storeId = getRecoil(selectedStore);
 
   const { mutateAsync } = usePostMutation({
-    queryKey: KEYS.services,
+    queryKey: [KEYS.services, 'Store Services'],
     mutationFn: servicesService.postOneInsideStore,
   });
 
-  const onSubmit = async (values: ServiceSchema) => await mutateAsync(values);
+  const onSubmit = (values: ServiceSchema) =>
+    // @ts-ignore
+    validateSubmit(values, serviceSchema, mutateAsync, enqueueSnackbar);
 
   return (
     <FormDialog
       title='Add Service'
-      maxWidth={'md'}
       defaultValues={{
         ownerId: auth?.currentUser?.uid,
         category: '',
+        description: '',
         availability: 'Available',
         // @ts-ignore
         storeId: storeId,

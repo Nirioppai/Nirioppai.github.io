@@ -24,5 +24,16 @@ export const createGenericService = <TBase>(documentReference: string) => {
         ...item,
       };
     },
+    putOneCashier: async ({ id, item }: UpdateParams): Promise<T> => {
+      const docRef = doc(db, documentReference, id);
+      // @ts-ignore
+      await updateDoc(docRef, item);
+
+      return {
+        // @ts-ignore
+        _id: id,
+        ...item,
+      };
+    },
   };
 };

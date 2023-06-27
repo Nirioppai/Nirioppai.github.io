@@ -17,7 +17,7 @@ const EditOwnerServiceModal: FC<
   }
 > = ({ data, setData, onClose, ...rest }) => {
   const { mutateAsync } = usePutMutation({
-    queryKey: KEYS.services,
+    queryKey: [KEYS.services, 'Store Services'],
     mutationFn: serviceService2.putOne,
   });
 

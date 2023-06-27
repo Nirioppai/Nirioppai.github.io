@@ -38,6 +38,7 @@ function Register() {
           name: '',
           email: '',
           password: '',
+          confirmPassword: '',
           userType: 'businessOwner',
         }}
         schema={registerSchema}

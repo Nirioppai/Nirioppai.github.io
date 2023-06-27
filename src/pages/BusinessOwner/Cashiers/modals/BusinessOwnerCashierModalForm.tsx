@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { FC, ReactNode, useEffect } from 'react';
 
 import { TextFieldElement } from 'react-hook-form-mui';
 import { useQueries } from 'react-query';
@@ -7,7 +7,14 @@ import { SelectDropdownElement } from '~/components';
 import { auth } from '~/configs';
 import { KEYS } from '~/constants';
 import { storesService } from '~/services';
-const BusinessOwnerCashierModalForm = () => {
+
+interface BusinessOwnerCashierModalFormProps {
+  children?: ReactNode;
+}
+
+const BusinessOwnerCashierModalForm: FC<BusinessOwnerCashierModalFormProps> = ({
+  children,
+}) => {
   const queries = useQueries([
     {
       queryKey: KEYS.storeInstances,
@@ -24,7 +31,7 @@ const BusinessOwnerCashierModalForm = () => {
   return (
     <>
       <TextFieldElement name='name' label='Cashier Name' required />
-      <TextFieldElement name='password' label='Cashier Password' required />
+      {children}
       <SelectDropdownElement
         name='storeId'
         label='Store Name'

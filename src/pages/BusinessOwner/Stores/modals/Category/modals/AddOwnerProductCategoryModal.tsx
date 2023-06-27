@@ -2,6 +2,7 @@ import { FC } from 'react';
 
 import type { DialogProps } from '@mui/material';
 import { Grid } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { getRecoil } from 'recoil-nexus';
 
 import BusinessOwnerProductCategoryModalForm from './BusinessOwnerProductCategoryModalForm';
@@ -12,25 +13,27 @@ import { KEYS } from '~/constants';
 import { usePostMutation } from '~/hooks';
 import { ProductCategorySchema, productCategorySchema } from '~/schemas';
 import { categoriesService } from '~/services';
+import { validateSubmit } from '~/utils';
 
 const AddOwnerProductCategoryModal: FC<DialogProps> = ({
   onClose,
   ...rest
 }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const storeId = getRecoil(selectedStore);
 
   const { mutateAsync } = usePostMutation({
-    queryKey: KEYS.productCategories,
+    queryKey: [KEYS.productCategories, 'Store Product Categories'],
     mutationFn: categoriesService.postOneProductCategoryInsideStore,
   });
 
-  const onSubmit = async (values: ProductCategorySchema) =>
-    await mutateAsync(values);
+  const onSubmit = (values: ProductCategorySchema) =>
+    // @ts-ignore
+    validateSubmit(values, productCategorySchema, mutateAsync, enqueueSnackbar);
 
   return (
     <FormDialog
       title='Add Product Category'
-      maxWidth={'md'}
       defaultValues={{
         ownerId: auth?.currentUser?.uid,
         // @ts-ignore

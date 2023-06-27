@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import type { DialogProps } from '@mui/material';
+import { useSnackbar } from 'notistack';
 
 import BusinessOwnerProductCategoryModalForm from './BusinessOwnerProductCategoryModalForm';
 
@@ -10,18 +11,21 @@ import { KEYS } from '~/constants';
 import { usePostMutation } from '~/hooks';
 import { ProductCategorySchema, productCategorySchema } from '~/schemas';
 import { categoriesService } from '~/services';
+import { validateSubmit } from '~/utils';
 
 const AddOwnerProductCategoryModal: FC<DialogProps> = ({
   onClose,
   ...rest
 }) => {
+  const { enqueueSnackbar } = useSnackbar();
   const { mutateAsync } = usePostMutation({
     queryKey: KEYS.productCategories,
     mutationFn: categoriesService.postOneProductCategory,
   });
 
-  const onSubmit = async (values: ProductCategorySchema) =>
-    await mutateAsync(values);
+  const onSubmit = (values: ProductCategorySchema) =>
+    // @ts-ignore
+    validateSubmit(values, productCategorySchema, mutateAsync, enqueueSnackbar);
 
   return (
     <FormDialog

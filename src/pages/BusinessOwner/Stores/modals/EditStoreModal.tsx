@@ -77,15 +77,30 @@ const EditEquipmentModal: FC<CombinedProps> = ({
             },
             {
               name: 'Services',
-              content: <StoreServicesGrid storeId={data._id} />,
+              content: (
+                <StoreServicesGrid
+                  storeId={data._id}
+                  disableWrite={disableWrite}
+                />
+              ),
             },
             {
               name: 'Categories',
-              content: <StoreCategoryGrid storeId={data._id} />,
+              content: (
+                <StoreCategoryGrid
+                  storeId={data._id}
+                  disableWrite={disableWrite}
+                />
+              ),
             },
             {
               name: 'Cashiers',
-              content: <StoreCashierGrid storeId={data._id} />,
+              content: (
+                <StoreCashierGrid
+                  storeId={data._id}
+                  disableWrite={disableWrite}
+                />
+              ),
             },
           ]}
         />

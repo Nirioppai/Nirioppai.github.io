@@ -1,5 +1,10 @@
-import { FC, PropsWithChildren, useEffect } from 'react';
+import { FC, PropsWithChildren } from 'react';
 
+import { Chip } from '@mui/material';
+import {
+  Alert as AlertIcon,
+  CheckBold as CheckBoldIcon,
+} from 'mdi-material-ui';
 import { useQueries } from 'react-query';
 
 // eslint-disable-next-line import/order
@@ -27,11 +32,6 @@ const OwnerServicesGrid: FC<PropsWithChildren<{ disableWrite?: boolean }>> = ({
   const isLoading = queries.some((q) => q.isLoading);
   // const isSuccess = queries.every((q) => q.isSuccess);
   const isError = queries.some((q) => q.isError);
-
-  useEffect(() => {
-    queries.forEach((q) => q.refetch());
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   // MUTATIONS
 
@@ -75,6 +75,29 @@ const OwnerServicesGrid: FC<PropsWithChildren<{ disableWrite?: boolean }>> = ({
           {
             field: 'availability',
             headerName: 'Availability',
+            cellRenderer: (params: any) => {
+              const availability = params.data.availability;
+
+              let color = 'success';
+              let IconComponent = CheckBoldIcon;
+
+              if (availability == 'Unavailable') {
+                color = 'error';
+                IconComponent = AlertIcon;
+              }
+              return (
+                <div>
+                  <Chip
+                    icon={<IconComponent />}
+                    // @ts-ignore
+                    color={color}
+                    size='small'
+                    variant='filled'
+                    label={availability}
+                  />
+                </div>
+              );
+            },
 
             minWidth: 250,
           },

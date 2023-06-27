@@ -1,6 +1,7 @@
 import { FC, useEffect } from 'react';
 
 import type { DialogProps } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { useQueries } from 'react-query';
 import { getRecoil } from 'recoil-nexus';
 
@@ -10,8 +11,11 @@ import { KEYS } from '~/constants';
 import { usePostMutation } from '~/hooks';
 import { ServiceSchema, serviceSchema } from '~/schemas';
 import { servicesService } from '~/services';
+import { validateSubmit } from '~/utils';
 
 const AddExistingServiceModal: FC<DialogProps> = ({ onClose, ...rest }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const storeId = getRecoil(selectedStore);
 
   const queries = useQueries([
@@ -20,7 +24,7 @@ const AddExistingServiceModal: FC<DialogProps> = ({ onClose, ...rest }) => {
       queryFn: () => servicesService.getServices(auth?.currentUser?.uid || ''),
     },
     {
-      queryKey: 'storeServices',
+      queryKey: [KEYS.services, 'Store Services'],
       queryFn: () => servicesService.getServicesInStore(storeId || ''),
     },
   ]);
@@ -55,9 +59,9 @@ const AddExistingServiceModal: FC<DialogProps> = ({ onClose, ...rest }) => {
     mutationFn: servicesService.postOneExistingServiceInsideStore,
   });
 
-  const onSubmit = async (values: ServiceSchema) => {
-    await mutateAsync(values);
-  };
+  const onSubmit = (values: ServiceSchema) =>
+    // @ts-ignore
+    validateSubmit(values, serviceSchema, mutateAsync, enqueueSnackbar);
 
   return (
     <FormDialog

@@ -1,6 +1,8 @@
 import { FC } from 'react';
 
 import type { DialogProps } from '@mui/material';
+import { useSnackbar } from 'notistack';
+import { TextFieldElement } from 'react-hook-form-mui';
 
 import BusinessOwnerCashierModalForm from './BusinessOwnerCashierModalForm';
 
@@ -10,14 +12,18 @@ import { KEYS } from '~/constants';
 import { usePostMutation } from '~/hooks';
 import { CashierSchema, cashierSchema } from '~/schemas';
 import { cashiersService } from '~/services';
-
+import { validateSubmit } from '~/utils';
 const AddOwnerCashierModal: FC<DialogProps> = ({ onClose, ...rest }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const { mutateAsync } = usePostMutation({
     queryKey: KEYS.cashiers,
     mutationFn: cashiersService.postOne,
   });
 
-  const onSubmit = async (values: CashierSchema) => await mutateAsync(values);
+  const onSubmit = (values: CashierSchema) =>
+    // @ts-ignore
+    validateSubmit(values, cashierSchema, mutateAsync, enqueueSnackbar);
 
   return (
     <FormDialog
@@ -31,7 +37,9 @@ const AddOwnerCashierModal: FC<DialogProps> = ({ onClose, ...rest }) => {
       onClose={onClose}
       {...rest}
     >
-      <BusinessOwnerCashierModalForm />
+      <BusinessOwnerCashierModalForm>
+        <TextFieldElement name='password' label='Cashier Password' required />
+      </BusinessOwnerCashierModalForm>
     </FormDialog>
   );
 };

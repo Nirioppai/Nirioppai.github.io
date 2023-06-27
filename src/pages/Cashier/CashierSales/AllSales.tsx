@@ -1,5 +1,11 @@
 import { FC, PropsWithChildren } from 'react';
 
+import { Chip } from '@mui/material';
+import {
+  Alert as AlertIcon,
+  CheckBold as CheckBoldIcon,
+  Information as InformationIcon,
+} from 'mdi-material-ui';
 import { useQueries } from 'react-query';
 import { getRecoil } from 'recoil-nexus';
 
@@ -89,13 +95,40 @@ const AllSales: FC<PropsWithChildren<AllSalesItemsGridProps>> = ({
                   data.productSaleId == 'no-sale'
                 ? 'Service Sale'
                 : 'Product & Service Sale',
-            minWidth: 150,
+            minWidth: 180,
           },
           {
             field: 'status',
             headerName: 'Status',
+            cellRenderer: (params: any) => {
+              const status = params.data.status;
 
-            minWidth: 150,
+              let color = 'success';
+              let IconComponent = CheckBoldIcon;
+
+              if (status == 'Cancelled') {
+                color = 'error';
+                IconComponent = AlertIcon;
+              } else if (status == 'Edited') {
+                color = 'warning';
+                IconComponent = InformationIcon;
+              }
+              return (
+                <div>
+                  <Chip
+                    icon={<IconComponent />}
+                    // @ts-ignore
+                    color={color}
+                    size='small'
+                    variant='filled'
+                    label={status}
+                  />
+                </div>
+              );
+            },
+
+            minWidth: 250,
+            maxWidth: 200,
           },
         ]}
         isLoading={isLoading}

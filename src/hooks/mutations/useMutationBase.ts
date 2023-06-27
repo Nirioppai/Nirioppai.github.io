@@ -58,6 +58,10 @@ export const useMutationBase = <TData, TVariables>({
         : queryClient.setQueryData<TData[]>(queryKey, (oldData) =>
             updater(oldData, data, variables)
           );
+
+      // Invalidate queries here
+      queryClient.invalidateQueries(queryKey);
+
       if (onSuccessText) enqueueSnackbar(onSuccessText, { variant: 'success' });
       onSuccessAction?.(data, { queryClient });
     },

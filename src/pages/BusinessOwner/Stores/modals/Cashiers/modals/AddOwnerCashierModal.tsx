@@ -2,6 +2,7 @@ import { FC } from 'react';
 
 import type { DialogProps } from '@mui/material';
 import { Grid } from '@mui/material';
+import { useSnackbar } from 'notistack';
 import { getRecoil } from 'recoil-nexus';
 
 import BusinessOwnerCashierModalForm from './BusinessOwnerCashierModalForm';
@@ -12,20 +13,24 @@ import { KEYS } from '~/constants';
 import { usePostMutation } from '~/hooks';
 import { CashierSchema, cashierSchema } from '~/schemas';
 import { cashiersService } from '~/services';
+import { validateSubmit } from '~/utils';
 
 const AddOwnerCashierModal: FC<DialogProps> = ({ onClose, ...rest }) => {
+  const { enqueueSnackbar } = useSnackbar();
+
   const storeId = getRecoil(selectedStore);
   const { mutateAsync } = usePostMutation({
-    queryKey: KEYS.cashiers,
+    queryKey: [KEYS.cashiers, 'Store Cashiers'],
     mutationFn: cashiersService.postOneCashierInsideStore,
   });
 
-  const onSubmit = async (values: CashierSchema) => await mutateAsync(values);
+  const onSubmit = (values: CashierSchema) =>
+    // @ts-ignore
+    validateSubmit(values, cashierSchema, mutateAsync, enqueueSnackbar);
 
   return (
     <FormDialog
       title='Add Cashier'
-      maxWidth={'md'}
       defaultValues={{
         ownerId: auth?.currentUser?.uid,
         storeId: storeId,
