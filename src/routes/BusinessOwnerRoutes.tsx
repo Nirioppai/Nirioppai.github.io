@@ -4,6 +4,7 @@ import {
   BusinessOwnerCashiers,
   BusinessOwnerCategories,
   BusinessOwnerProducts,
+  BusinessOwnerSales,
   BusinessOwnerServices,
   BusinessOwnerStores,
   NotFound,
@@ -23,6 +24,7 @@ const BusinessOwnerRoutes = () => (
       <Route path='/services' element={<BusinessOwnerServices />} />
       <Route path='/categories' element={<BusinessOwnerCategories />} />
       <Route path='/cashiers' element={<BusinessOwnerCashiers />} />
+      <Route path='/sales' element={<BusinessOwnerSales />} />
 
       <Route
         path='*'

@@ -1,4 +1,5 @@
 import {
+  Timestamp,
   addDoc,
   collection,
   deleteDoc,
@@ -11,7 +12,7 @@ import {
   where,
 } from 'firebase/firestore';
 
-import { db } from '~/configs';
+import { auth, db } from '~/configs';
 import { KEYS } from '~/constants';
 import { InvoiceSchema } from '~/schemas';
 import { createGenericService } from '~/utils';
@@ -62,6 +63,71 @@ export const invoiceService = {
     const invoicesWithSales = await Promise.all(salesPromises);
 
     return invoicesWithSales;
+  },
+
+  getOwnerInvoices: async (): Promise<any> => {
+    const userId = auth?.currentUser?.uid;
+
+    const storesRef = collection(db, KEYS.storeInstances);
+    const q = query(storesRef, where('ownerId', '==', userId));
+
+    const querySnapshot = await getDocs(q);
+    const stores = mapData(querySnapshot);
+
+    const invoicesRef = collection(db, KEYS.invoices);
+
+    // Create an array of promises
+    const invoicesPromises = stores.map(async (store: any) => {
+      const invoicesQuery = query(
+        invoicesRef,
+        where('storeId', '==', store._id)
+      );
+      const invoicesSnapshot = await getDocs(invoicesQuery);
+
+      // For each invoice, get the productSale and serviceSale
+      const invoicePromises = invoicesSnapshot.docs.map(
+        async (invoiceDoc: any) => {
+          const invoiceData = invoiceDoc.data();
+
+          const productSaleDoc = doc(
+            db,
+            'productSales',
+            invoiceData.productSaleId
+          );
+          const serviceSaleDoc = doc(
+            db,
+            'serviceSales',
+            invoiceData.serviceSaleId
+          );
+
+          const [productSaleSnapshot, serviceSaleSnapshot] = await Promise.all([
+            getDoc(productSaleDoc),
+            getDoc(serviceSaleDoc),
+          ]);
+
+          // If the productSale and serviceSale exist, add them to the invoice
+          if (productSaleSnapshot.exists()) {
+            invoiceData.productSale = productSaleSnapshot.data();
+          }
+          if (serviceSaleSnapshot.exists()) {
+            invoiceData.serviceSale = serviceSaleSnapshot.data();
+          }
+
+          return {
+            id: invoiceDoc.id,
+            ...invoiceData,
+          };
+        }
+      );
+
+      store.invoices = await Promise.all(invoicePromises);
+
+      return store;
+    });
+
+    const storesWithInvoices = await Promise.all(invoicesPromises);
+
+    return storesWithInvoices;
   },
   getServiceInvoices: async (storeId: string): Promise<any> => {
     const q = query(
@@ -199,6 +265,12 @@ export const invoiceService = {
       // Include the ID in the invoiceData
       invoiceData.productSaleId = productSaleRef.id;
     }
+
+    const tempTimeStamp = Timestamp.now();
+
+    const date = new Date(tempTimeStamp.seconds * 1000); // JavaScript uses milliseconds
+
+    invoiceData.timestamp = date.toISOString();
 
     const invoiceRef = await addDoc(collection(db, KEYS.invoices), invoiceData);
 

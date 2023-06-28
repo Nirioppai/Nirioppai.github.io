@@ -30,8 +30,6 @@ const StoreProductsGrid: FC<StoreProductsGridProps> = ({
     },
   ]);
 
-  console.log('store ID: ', storeId);
-
   const products = queries[0].data || [];
 
   // @ts-ignore

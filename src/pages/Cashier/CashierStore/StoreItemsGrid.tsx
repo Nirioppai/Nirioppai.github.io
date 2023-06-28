@@ -30,8 +30,6 @@ const StoreItemsGrid: FC<PropsWithChildren<StoreItemsGridProps>> = ({
 }) => {
   const [selectedItems, setSelectedItems] = useState(initialItemsState);
 
-  console.log(selectedItems);
-
   const handleProductClick = (event: any) => {
     // @ts-ignore
     setSelectedItems((prevState) => {
