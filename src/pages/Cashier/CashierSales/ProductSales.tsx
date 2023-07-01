@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useEffect } from 'react';
 
 import { Chip } from '@mui/material';
 import {
@@ -7,41 +7,39 @@ import {
   Information as InformationIcon,
 } from 'mdi-material-ui';
 import { useQueries } from 'react-query';
-import { getRecoil } from 'recoil-nexus';
 
 import { DynamicAgGrid } from '~/components';
-import { cashierSelectedStore } from '~/configs';
 import { KEYS } from '~/constants';
 import { invoiceService } from '~/services';
 
 interface ProductSalesProps {
   disableWrite?: boolean;
+  storeId: string;
 }
 
 const ProductSales: FC<PropsWithChildren<ProductSalesProps>> = ({
   disableWrite,
+  storeId,
 }) => {
-  const storeId = getRecoil(cashierSelectedStore);
-
-  const queries = useQueries(
-    // @ts-ignore
-    storeId
-      ? [
-          {
-            queryKey: [KEYS.invoices, storeId, 'product'],
-            queryFn: () => invoiceService.getProductInvoices(storeId),
-          },
-        ]
-      : []
-  );
+  const queries = useQueries([
+    {
+      queryKey: [KEYS.invoices, storeId, 'products'],
+      queryFn: () => invoiceService.getProductInvoices(storeId),
+    },
+  ]);
 
   // @ts-ignore
-  const invoices = queries[0]?.data || [];
+  const invoices = queries[0].data || [];
 
   // @ts-ignore
   const isLoading = queries.some((q) => q.isLoading);
   // @ts-ignore
   const isError = queries.some((q) => q.isError);
+
+  useEffect(() => {
+    queries.forEach((q) => q.refetch());
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -52,6 +50,7 @@ const ProductSales: FC<PropsWithChildren<ProductSalesProps>> = ({
           {
             field: 'customerName',
             headerName: 'Customer Name',
+            headerTooltip: 'Customer Name',
             sort: 'asc',
             minWidth: 200,
             cellStyle: { fontWeight: 500 },
@@ -61,6 +60,7 @@ const ProductSales: FC<PropsWithChildren<ProductSalesProps>> = ({
           {
             field: 'customerContact',
             headerName: 'Customer Contact Details',
+            headerTooltip: 'Customer Contact Details',
             valueGetter: ({ data }) =>
               data.customerContact ? data.customerContact : 'N/A',
             minWidth: 150,
@@ -68,6 +68,7 @@ const ProductSales: FC<PropsWithChildren<ProductSalesProps>> = ({
           {
             field: 'paymentType',
             headerName: 'Payment Type',
+            headerTooltip: 'Payment Type',
             valueGetter: ({ data }) =>
               data.paymentType ? data.paymentType : 'N/A',
             minWidth: 150,
@@ -75,6 +76,7 @@ const ProductSales: FC<PropsWithChildren<ProductSalesProps>> = ({
           {
             field: 'productSaleId',
             headerName: 'Transaction Type',
+            headerTooltip: 'Transaction Type',
             valueGetter: ({ data }) =>
               data.productSaleId != 'no-sale' && data.serviceSaleId == 'no-sale'
                 ? 'Product Sale'
@@ -87,6 +89,7 @@ const ProductSales: FC<PropsWithChildren<ProductSalesProps>> = ({
           {
             field: 'status',
             headerName: 'Status',
+            headerTooltip: 'Status',
             cellRenderer: (params: any) => {
               const status = params.data.status;
 
@@ -124,6 +127,7 @@ const ProductSales: FC<PropsWithChildren<ProductSalesProps>> = ({
           add: disableWrite,
           edit: disableWrite,
           archive: disableWrite,
+          export: !disableWrite,
         }}
       />
     </>

@@ -28,6 +28,8 @@ const OwnerProductsGrid: FC<PropsWithChildren<{ disableWrite?: boolean }>> = ({
 
   const products = queries[0].data || [];
 
+  console.log(products);
+
   const isLoading = queries.some((q) => q.isLoading);
   // const isSuccess = queries.every((q) => q.isSuccess);
   const isError = queries.some((q) => q.isError);
@@ -50,14 +52,22 @@ const OwnerProductsGrid: FC<PropsWithChildren<{ disableWrite?: boolean }>> = ({
             sort: 'asc',
             minWidth: 200,
             cellStyle: { fontWeight: 500 },
+            headerTooltip: 'Name',
           },
           {
             field: 'price',
             headerName: 'Price',
-
+            headerTooltip: 'Price',
             minWidth: 100,
           },
           {
+            field: 'category',
+            headerName: 'Category',
+            headerTooltip: 'Category',
+            minWidth: 150,
+          },
+          {
+            headerTooltip: 'Stock',
             field: 'stock',
             headerName: 'Stock',
             cellRenderer: (params: any) => {
@@ -98,12 +108,13 @@ const OwnerProductsGrid: FC<PropsWithChildren<{ disableWrite?: boolean }>> = ({
           {
             field: 'description',
             headerName: 'Description',
-
+            headerTooltip: 'Description',
             minWidth: 250,
           },
           {
             field: 'availability',
             headerName: 'Availability',
+            headerTooltip: 'Availability',
             cellRenderer: (params: any) => {
               const availability = params.data.availability;
 
@@ -128,7 +139,7 @@ const OwnerProductsGrid: FC<PropsWithChildren<{ disableWrite?: boolean }>> = ({
               );
             },
 
-            minWidth: 250,
+            minWidth: 150,
           },
         ]}
         isLoading={isLoading}
@@ -137,6 +148,7 @@ const OwnerProductsGrid: FC<PropsWithChildren<{ disableWrite?: boolean }>> = ({
           add: !disableWrite,
           edit: !disableWrite,
           archive: !disableWrite,
+          export: !disableWrite,
         }}
         onArchive={async (row) => await archiveEntry(row._id)}
         AddModal={AddOwnerProductModal}

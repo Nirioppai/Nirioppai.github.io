@@ -55,6 +55,7 @@ const ServicesList: FC<PropsWithChildren<ServicesListProps>> = ({
           {
             field: 'name',
             headerName: 'Name',
+            headerTooltip: 'Name',
             sort: 'asc',
             minWidth: 200,
             cellStyle: { fontWeight: 500 },
@@ -62,19 +63,20 @@ const ServicesList: FC<PropsWithChildren<ServicesListProps>> = ({
           {
             field: 'price',
             headerName: 'Price',
-
+            headerTooltip: 'Price',
             minWidth: 100,
           },
 
           {
             field: 'description',
             headerName: 'Description',
-
+            headerTooltip: 'Description',
             minWidth: 250,
           },
           {
             field: 'availability',
             headerName: 'Availability',
+            headerTooltip: 'Availability',
             cellRenderer: (params: any) => {
               const availability = params.data.availability;
 

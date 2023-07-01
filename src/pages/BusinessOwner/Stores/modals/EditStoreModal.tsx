@@ -3,9 +3,11 @@ import { FC } from 'react';
 import type { DialogProps } from '@mui/material';
 import { setRecoil } from 'recoil-nexus';
 
+import StoreSalesGrid from './StoreSalesGrid';
+
 import {
   StoreCashierGrid,
-  StoreCategoryGrid,
+  // StoreCategoryGrid,
   StoreOverviewGrid,
   StoreProductsGrid,
   StoreServicesGrid,
@@ -84,19 +86,28 @@ const EditEquipmentModal: FC<CombinedProps> = ({
                 />
               ),
             },
+            // {
+            //   name: 'Categories',
+            //   content: (
+            //     <StoreCategoryGrid
+            //       storeId={data._id}
+            //       disableWrite={disableWrite}
+            //     />
+            //   ),
+            // },
             {
-              name: 'Categories',
+              name: 'Cashiers',
               content: (
-                <StoreCategoryGrid
+                <StoreCashierGrid
                   storeId={data._id}
                   disableWrite={disableWrite}
                 />
               ),
             },
             {
-              name: 'Cashiers',
+              name: 'Sales',
               content: (
-                <StoreCashierGrid
+                <StoreSalesGrid
                   storeId={data._id}
                   disableWrite={disableWrite}
                 />

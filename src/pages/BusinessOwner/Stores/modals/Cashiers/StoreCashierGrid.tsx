@@ -41,6 +41,7 @@ const StoreCashierGrid: FC<StoreCashiersGridProps> = ({
             field: 'name',
             headerName: 'Name',
             sort: 'asc',
+            headerTooltip: 'Name',
             minWidth: 200,
             maxWidth: 300,
             cellStyle: { fontWeight: 500 },
@@ -48,6 +49,7 @@ const StoreCashierGrid: FC<StoreCashiersGridProps> = ({
           {
             field: 'email',
             headerName: 'Email',
+            headerTooltip: 'Email',
             minWidth: 200,
           },
           {
@@ -68,6 +70,7 @@ const StoreCashierGrid: FC<StoreCashiersGridProps> = ({
           addAnother: disableWrite,
           edit: disableWrite,
           archive: disableWrite,
+          export: !disableWrite,
         }}
         addText='Add'
         // addAnotherText='Add From Existing Cashiers'

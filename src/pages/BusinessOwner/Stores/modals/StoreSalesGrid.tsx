@@ -1,25 +1,20 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC } from 'react';
 
-// import { Grid } from '@mui/material';
-
-import { getRecoil } from 'recoil-nexus';
-
-import AllSales from './AllSales';
-import ProductSales from './ProductSales';
-import ServiceSales from './ServiceSales';
+import AllSales from '../../../Cashier/CashierSales/AllSales';
+import ProductSales from '../../../Cashier/CashierSales/ProductSales';
+import ServiceSales from '../../../Cashier/CashierSales/ServiceSales';
 
 import { TabWithContent } from '~/components';
-import { cashierSelectedStore } from '~/configs';
 
-interface StoreItemsGridProps {
+type StoreCashiersGridProps = {
   disableWrite?: boolean;
-}
+  storeId: string;
+};
 
-const SaleItemsGrid: FC<PropsWithChildren<StoreItemsGridProps>> = ({
+const StoreSalesGrid: FC<StoreCashiersGridProps> = ({
   disableWrite,
+  storeId,
 }) => {
-  const storeId = getRecoil(cashierSelectedStore);
-
   return (
     <>
       <TabWithContent
@@ -46,4 +41,4 @@ const SaleItemsGrid: FC<PropsWithChildren<StoreItemsGridProps>> = ({
   );
 };
 
-export default SaleItemsGrid;
+export default StoreSalesGrid;

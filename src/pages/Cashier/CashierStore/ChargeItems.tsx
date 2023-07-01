@@ -3,7 +3,7 @@ import { FC, PropsWithChildren, useCallback } from 'react';
 import { Button } from '@mui/material';
 import { getRecoil } from 'recoil-nexus';
 
-import { cashierSelectedStore } from '~/configs';
+import { auth, cashierSelectedStore } from '~/configs';
 import { KEYS } from '~/constants';
 import { usePostMutation } from '~/hooks';
 import { BaseItemSchema } from '~/schemas';
@@ -48,6 +48,7 @@ const ChargeItems: FC<PropsWithChildren<ChargeItemsProps>> = ({
     const invoiceData = {
       storeId, // store ID from recoil state
       // you need to replace these with actual IDs of products and services
+      cashierId: auth?.currentUser?.uid || '',
       productSaleId: 'no-sale',
       serviceSaleId: 'no-sale',
       customerName: selectedItems.customerName,

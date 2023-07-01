@@ -22,6 +22,7 @@ import clsx from 'clsx';
 import {
   Archive as ArchiveIcon,
   EyeArrowRight as EyeArrowRightIcon,
+  FileDelimited as FileDelimitedIcon,
   Pencil as PencilIcon,
   PlusBox as PlusBoxIcon,
   Plus as PlusIcon,
@@ -67,6 +68,7 @@ interface DynamicAgGridProps<T> extends AgGridReactProps {
   actions?: {
     add?: boolean;
     addAnother?: boolean;
+    export?: boolean;
     edit?: boolean;
     view?: boolean;
     archive?: boolean;
@@ -75,7 +77,8 @@ interface DynamicAgGridProps<T> extends AgGridReactProps {
   addAnotherText?: string;
   actionsProps?: {
     add?: ButtonProps;
-    addAnother: ButtonProps;
+    addAnother?: ButtonProps;
+    export?: ButtonProps;
     edit?: IconButtonProps;
     view?: IconButtonProps;
     archive?: IconButtonProps;
@@ -195,6 +198,12 @@ const DynamicAgGrid = <T extends { _id: string }>({
     setGridApi(params.api);
     if (dynamicHeight) {
       params.api.setDomLayout('autoHeight');
+    }
+  };
+
+  const handleExport = () => {
+    if (gridApi) {
+      gridApi.exportDataAsCsv();
     }
   };
 
@@ -322,6 +331,21 @@ const DynamicAgGrid = <T extends { _id: string }>({
                 {...actionsProps?.addAnother}
               >
                 {addAnotherText}
+              </Button>
+            </Grid>
+          )}
+
+          {actions?.export && (
+            <Grid item sm='auto'>
+              <Button
+                color='success'
+                variant='contained'
+                startIcon={<FileDelimitedIcon sx={{ color: 'white' }} />}
+                onClick={handleExport}
+                // disabled={!canModify}
+                {...actionsProps?.export}
+              >
+                <Box sx={{ color: 'white' }}>Export</Box>
               </Button>
             </Grid>
           )}

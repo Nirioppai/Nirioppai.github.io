@@ -46,6 +46,7 @@ const StoreProductsGrid: FC<StoreProductsGridProps> = ({
           {
             field: 'name',
             headerName: 'Name',
+            headerTooltip: 'Name',
             sort: 'asc',
             minWidth: 200,
             cellStyle: { fontWeight: 500 },
@@ -53,12 +54,19 @@ const StoreProductsGrid: FC<StoreProductsGridProps> = ({
           {
             field: 'price',
             headerName: 'Price',
-
+            headerTooltip: 'Price',
             minWidth: 100,
+          },
+          {
+            field: 'category',
+            headerName: 'Category',
+            headerTooltip: 'Category',
+            minWidth: 150,
           },
           {
             field: 'stock',
             headerName: 'Stock',
+            headerTooltip: 'Stock',
             cellRenderer: (params: any) => {
               const stockValue = params.data.stock;
               let color = 'success';
@@ -96,11 +104,12 @@ const StoreProductsGrid: FC<StoreProductsGridProps> = ({
           {
             field: 'description',
             headerName: 'Description',
-
+            headerTooltip: 'Description',
             minWidth: 250,
           },
           {
             field: 'availability',
+            headerTooltip: 'Availability',
             headerName: 'Availability',
             cellRenderer: (params: any) => {
               const availability = params.data.availability;
@@ -126,7 +135,7 @@ const StoreProductsGrid: FC<StoreProductsGridProps> = ({
               );
             },
 
-            minWidth: 250,
+            minWidth: 150,
           },
         ]}
         isLoading={isLoading}
@@ -136,6 +145,7 @@ const StoreProductsGrid: FC<StoreProductsGridProps> = ({
           addAnother: !disableWrite,
           edit: disableWrite,
           archive: disableWrite,
+          export: !disableWrite,
         }}
         addText='Add New Product'
         addAnotherText='Add From Existing Products'

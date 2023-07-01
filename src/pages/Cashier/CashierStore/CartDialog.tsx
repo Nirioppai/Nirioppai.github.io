@@ -105,7 +105,7 @@ const CartDialog: FC<CartDialogProps> = ({ selectedItems, onRemoveItem }) => {
                   <ListItem>
                     <ListItemText
                       sx={{ mt: '16px', textAlign: 'right' }}
-                      primary={formatNumber(item.price * count) + ' PHP'}
+                      primary={formatNumber(item.price * count) + ' ₱'}
                     />
                   </ListItem>
                 </List>

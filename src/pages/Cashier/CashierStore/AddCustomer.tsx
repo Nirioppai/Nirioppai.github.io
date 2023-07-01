@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { LoadingButton } from '@mui/lab';
 import {
+  Autocomplete,
   Button,
   Dialog,
   DialogActions,
@@ -17,6 +18,12 @@ import {
   Typography,
 } from '@mui/material';
 import { AccountMultiplePlus as AccountMultiplePlusIcon } from 'mdi-material-ui';
+import { useQueries } from 'react-query';
+import { getRecoil } from 'recoil-nexus';
+
+import { cashierSelectedStore } from '~/configs';
+import { KEYS } from '~/constants';
+import { invoiceService } from '~/services';
 interface CustomerDetails {
   customerName: string;
   customerContact: string;
@@ -45,6 +52,21 @@ const AddCustomer: React.FC<AddCustomerProps> = ({
   const [customerContact, setCustomerContact] = useState('');
   const [customerAddress, setCustomerAddress] = useState('');
   const [paymentType, setPaymentType] = useState('Cash');
+
+  const storeId = getRecoil(cashierSelectedStore);
+  const queries = useQueries([
+    {
+      queryKey: [KEYS.invoices, storeId, 'all'],
+      queryFn: () => invoiceService.getStoreInvoices(storeId || ''),
+    },
+  ]);
+
+  const customers = queries[0].data || [];
+
+  useEffect(() => {
+    queries.forEach((q) => q.refetch());
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // Reset internal state when the selectedItems prop changes
   useEffect(() => {
@@ -109,24 +131,57 @@ const AddCustomer: React.FC<AddCustomerProps> = ({
           </Typography>
         </DialogTitle>
         <DialogContent>
-          <TextField
-            label='Customer Name'
-            value={customerName}
-            onChange={(e) => setCustomerName(e.target.value)}
-            fullWidth
+          <Autocomplete
+            id='customerName'
+            freeSolo
+            options={customers.map((option: any) => option.customerName)}
+            onInputChange={(event, newInputValue) => {
+              setCustomerName(newInputValue);
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                value={customerName}
+                label='Customer Name'
+                fullWidth
+              />
+            )}
           />
-          <TextField
-            label='Customer Contact'
-            value={customerContact}
-            onChange={(e) => setCustomerContact(e.target.value)}
-            fullWidth
+
+          <Autocomplete
+            id='customerContact'
+            freeSolo
+            options={customers.map((option: any) => option.customerContact)}
+            onInputChange={(event, newInputValue) => {
+              setCustomerContact(newInputValue);
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                value={customerContact}
+                label='Customer Contact'
+                fullWidth
+              />
+            )}
           />
-          <TextField
-            label='Customer Address'
-            value={customerAddress}
-            onChange={(e) => setCustomerAddress(e.target.value)}
-            fullWidth
+
+          <Autocomplete
+            id='customerAddress'
+            freeSolo
+            options={customers.map((option: any) => option.customerAddress)}
+            onInputChange={(event, newInputValue) => {
+              setCustomerAddress(newInputValue);
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                value={customerAddress}
+                label='Customer Address'
+                fullWidth
+              />
+            )}
           />
+
           <FormControl fullWidth>
             <InputLabel id='payment-type-label'>Payment Type</InputLabel>
             <Select

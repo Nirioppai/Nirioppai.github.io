@@ -9,8 +9,9 @@ import {
   signOut,
 } from 'firebase/auth';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { setRecoil } from 'recoil-nexus';
 
-import { auth, db } from '~/configs';
+import { auth, cashierSelectedStore, db, selectedStore } from '~/configs';
 import { KEYS } from '~/constants';
 
 // @ts-ignore
@@ -115,6 +116,9 @@ export const AuthContextProvider = ({ children }) => {
   };
 
   const logout = () => {
+    setRecoil(selectedStore, '');
+    setRecoil(cashierSelectedStore, '');
+
     return signOut(auth);
   };
 

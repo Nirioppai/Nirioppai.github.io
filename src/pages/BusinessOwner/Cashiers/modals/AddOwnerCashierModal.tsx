@@ -2,7 +2,6 @@ import { FC } from 'react';
 
 import type { DialogProps } from '@mui/material';
 import { useSnackbar } from 'notistack';
-import { TextFieldElement } from 'react-hook-form-mui';
 
 import BusinessOwnerCashierModalForm from './BusinessOwnerCashierModalForm';
 
@@ -37,9 +36,7 @@ const AddOwnerCashierModal: FC<DialogProps> = ({ onClose, ...rest }) => {
       onClose={onClose}
       {...rest}
     >
-      <BusinessOwnerCashierModalForm>
-        <TextFieldElement name='password' label='Cashier Password' required />
-      </BusinessOwnerCashierModalForm>
+      <BusinessOwnerCashierModalForm />
     </FormDialog>
   );
 };

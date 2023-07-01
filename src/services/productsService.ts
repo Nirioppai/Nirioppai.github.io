@@ -35,24 +35,62 @@ export const productsService2 = createGenericService<ProductSchema>(
 export const productsService = {
   // GET STORES WHERE USERREF = CURRENTLY LOGGED IN USER
   getProducts: async (ownerId: string): Promise<any> => {
-    const q = query(
-      productInstanceRef,
-      where('ownerId', '==', ownerId)
-      // orderBy('timestamp', 'desc')
-    );
+    const q = query(productInstanceRef, where('ownerId', '==', ownerId));
 
     const data = await getDocs(q);
-    return mapData(data);
+
+    const productData = mapData(data);
+
+    // Create a category map
+    const categoryMap: { [key: string]: any } = {};
+    const categoryInstanceRef = collection(db, KEYS.productCategories);
+    const categoryData = await getDocs(categoryInstanceRef);
+
+    categoryData.docs.forEach((doc) => {
+      const category = { ...doc.data(), _id: doc.id };
+      categoryMap[category._id] = category;
+    });
+
+    // Map product data
+    productData.forEach((product: any) => {
+      // Replace category id with category name
+      const category = categoryMap[product.category];
+      if (category) {
+        product.category = category.name;
+      }
+    });
+
+    return productData;
   },
   getProductsInStore: async (storeId: string): Promise<any> => {
     const q = query(
       productInstanceRef,
       where('storesAssigned', 'array-contains', storeId)
-      // orderBy('timestamp', 'desc')
     );
 
     const data = await getDocs(q);
-    return mapData(data);
+    const productData = mapData(data);
+
+    // Create a category map
+    const categoryMap: { [key: string]: any } = {};
+    const categoryInstanceRef = collection(db, KEYS.productCategories);
+    const categoryData = await getDocs(categoryInstanceRef);
+
+    categoryData.docs.forEach((doc) => {
+      const category = { ...doc.data(), _id: doc.id };
+      categoryMap[category._id] = category;
+    });
+
+    // Map product data
+    productData.forEach((product: any) => {
+      // Replace category id with category name
+      const category = categoryMap[product.category];
+      if (category) {
+        product.category = category.name;
+      }
+    });
+
+    return productData;
   },
   getCashierProductsInStore: async (storeId: string): Promise<any> => {
     const q = query(
@@ -63,7 +101,28 @@ export const productsService = {
     );
 
     const data = await getDocs(q);
-    return mapData(data);
+    const productData = mapData(data);
+
+    // Create a category map
+    const categoryMap: { [key: string]: any } = {};
+    const categoryInstanceRef = collection(db, KEYS.productCategories);
+    const categoryData = await getDocs(categoryInstanceRef);
+
+    categoryData.docs.forEach((doc) => {
+      const category = { ...doc.data(), _id: doc.id };
+      categoryMap[category._id] = category;
+    });
+
+    // Map product data
+    productData.forEach((product: any) => {
+      // Replace category id with category name
+      const category = categoryMap[product.category];
+      if (category) {
+        product.category = category.name;
+      }
+    });
+
+    return productData;
   },
 
   postOne: async (product: ProductSchema): Promise<any> => {
@@ -118,6 +177,8 @@ export const productsService = {
       price: docData.price,
       // @ts-ignore
       name: docData.name,
+      // @ts-ignore
+      stock: docData.stock,
       // @ts-ignore
       description: docData.description,
       // @ts-ignore

@@ -12,9 +12,9 @@ interface BusinessOwnerCashierModalFormProps {
   children?: ReactNode;
 }
 
-const BusinessOwnerCashierModalForm: FC<BusinessOwnerCashierModalFormProps> = ({
-  children,
-}) => {
+const BusinessOwnerCashierModalForm: FC<
+  BusinessOwnerCashierModalFormProps
+> = () => {
   const queries = useQueries([
     {
       queryKey: KEYS.storeInstances,
@@ -31,7 +31,12 @@ const BusinessOwnerCashierModalForm: FC<BusinessOwnerCashierModalFormProps> = ({
   return (
     <>
       <TextFieldElement name='name' label='Cashier Name' required />
-      {children}
+      <TextFieldElement
+        name='password'
+        label='Cashier Password'
+        disabled
+        required
+      />
       <SelectDropdownElement
         name='storeId'
         label='Store Name'

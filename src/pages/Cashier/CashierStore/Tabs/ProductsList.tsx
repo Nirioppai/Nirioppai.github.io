@@ -56,6 +56,7 @@ const ProductsList: FC<PropsWithChildren<ProductsListProps>> = ({
           {
             field: 'name',
             headerName: 'Name',
+            headerTooltip: 'Name',
             sort: 'asc',
             minWidth: 200,
             cellStyle: { fontWeight: 500 },
@@ -63,12 +64,19 @@ const ProductsList: FC<PropsWithChildren<ProductsListProps>> = ({
           {
             field: 'price',
             headerName: 'Price',
-
+            headerTooltip: 'Price',
             minWidth: 100,
+          },
+          {
+            field: 'category',
+            headerName: 'Category',
+            headerTooltip: 'Category',
+            minWidth: 200,
           },
           {
             field: 'stock',
             headerName: 'Stock',
+            headerTooltip: 'Stock',
             cellRenderer: (params: any) => {
               const stockValue = params.data.stock;
               let color = 'success';
@@ -106,12 +114,13 @@ const ProductsList: FC<PropsWithChildren<ProductsListProps>> = ({
           {
             field: 'description',
             headerName: 'Description',
-
-            minWidth: 250,
+            headerTooltip: 'Description',
+            minWidth: 200,
           },
           {
             field: 'availability',
             headerName: 'Availability',
+            headerTooltip: 'Availability',
             cellRenderer: (params: any) => {
               const availability = params.data.availability;
 

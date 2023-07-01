@@ -49,6 +49,7 @@ const OwnerServicesGrid: FC<PropsWithChildren<{ disableWrite?: boolean }>> = ({
             field: 'name',
             headerName: 'Name',
             sort: 'asc',
+            headerTooltip: 'Name',
             minWidth: 200,
             cellStyle: { fontWeight: 500 },
           },
@@ -56,25 +57,19 @@ const OwnerServicesGrid: FC<PropsWithChildren<{ disableWrite?: boolean }>> = ({
           {
             field: 'price',
             headerName: 'Price',
-
+            headerTooltip: 'Price',
             minWidth: 100,
-          },
-
-          {
-            field: 'category',
-            headerName: 'Category',
-
-            minWidth: 150,
           },
           {
             field: 'description',
             headerName: 'Description',
-
+            headerTooltip: 'Description',
             minWidth: 250,
           },
           {
             field: 'availability',
             headerName: 'Availability',
+            headerTooltip: 'Availability',
             cellRenderer: (params: any) => {
               const availability = params.data.availability;
 
@@ -108,6 +103,7 @@ const OwnerServicesGrid: FC<PropsWithChildren<{ disableWrite?: boolean }>> = ({
           add: !disableWrite,
           edit: !disableWrite,
           archive: !disableWrite,
+          export: !disableWrite,
         }}
         onArchive={async (row) => await archiveEntry(row._id)}
         AddModal={AddOwnerServiceModal}

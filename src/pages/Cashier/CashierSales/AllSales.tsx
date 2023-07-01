@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from 'react';
+import { FC, PropsWithChildren, useEffect } from 'react';
 
 import { Chip } from '@mui/material';
 import {
@@ -7,43 +7,41 @@ import {
   Information as InformationIcon,
 } from 'mdi-material-ui';
 import { useQueries } from 'react-query';
-import { getRecoil } from 'recoil-nexus';
+
+import ViewSaleModal from './ViewSaleModal';
 
 import { DynamicAgGrid } from '~/components';
-import { cashierSelectedStore } from '~/configs';
 import { KEYS } from '~/constants';
 import { invoiceService } from '~/services';
 
 interface AllSalesItemsGridProps {
   disableWrite?: boolean;
+  storeId: string;
 }
 
 const AllSales: FC<PropsWithChildren<AllSalesItemsGridProps>> = ({
   disableWrite,
+  storeId,
 }) => {
-  const storeId = getRecoil(cashierSelectedStore);
-
-  const queries = useQueries(
-    // @ts-ignore
-    storeId
-      ? [
-          {
-            queryKey: [KEYS.invoices, storeId, 'all'],
-            queryFn: () => invoiceService.getInvoices(storeId),
-          },
-        ]
-      : []
-  );
+  const queries = useQueries([
+    {
+      queryKey: [KEYS.invoices, storeId, 'all'],
+      queryFn: () => invoiceService.getStoreInvoices(storeId),
+    },
+  ]);
 
   // @ts-ignore
-  const invoices = queries[0]?.data || [];
-
-  console.log(invoices);
+  const invoices = queries[0].data || [];
 
   // @ts-ignore
   const isLoading = queries.some((q) => q.isLoading);
   // @ts-ignore
   const isError = queries.some((q) => q.isError);
+
+  useEffect(() => {
+    queries.forEach((q) => q.refetch());
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
@@ -55,6 +53,7 @@ const AllSales: FC<PropsWithChildren<AllSalesItemsGridProps>> = ({
             field: 'customerName',
             headerName: 'Customer Name',
             sort: 'asc',
+            headerTooltip: 'Customer Name',
             minWidth: 200,
             cellStyle: { fontWeight: 500 },
             valueGetter: ({ data }) =>
@@ -63,12 +62,14 @@ const AllSales: FC<PropsWithChildren<AllSalesItemsGridProps>> = ({
           {
             field: 'totalAmount',
             headerName: 'Total Amount',
-            valueGetter: ({ data }) => 'PHP ' + data.totalAmount,
+            headerTooltip: 'Total Amount',
+            valueGetter: ({ data }) => '₱ ' + data.totalAmount,
             maxWidth: 150,
           },
           {
             field: 'totalAmount',
             headerName: 'Number of Items',
+            headerTooltip: 'Number of Items',
             valueGetter: ({ data }) =>
               (data?.serviceSale?.services
                 ? data?.serviceSale?.services.length
@@ -81,6 +82,7 @@ const AllSales: FC<PropsWithChildren<AllSalesItemsGridProps>> = ({
           {
             field: 'paymentType',
             headerName: 'Payment Type',
+            headerTooltip: 'Payment Type',
             valueGetter: ({ data }) =>
               data.paymentType ? data.paymentType : 'N/A',
             maxWidth: 160,
@@ -88,6 +90,7 @@ const AllSales: FC<PropsWithChildren<AllSalesItemsGridProps>> = ({
           {
             field: 'productSaleId',
             headerName: 'Transaction Type',
+            headerTooltip: 'Transaction Type',
             valueGetter: ({ data }) =>
               data.productSaleId != 'no-sale' && data.serviceSaleId == 'no-sale'
                 ? 'Product Sale'
@@ -100,6 +103,7 @@ const AllSales: FC<PropsWithChildren<AllSalesItemsGridProps>> = ({
           {
             field: 'status',
             headerName: 'Status',
+            headerTooltip: 'Status',
             cellRenderer: (params: any) => {
               const status = params.data.status;
 
@@ -138,7 +142,9 @@ const AllSales: FC<PropsWithChildren<AllSalesItemsGridProps>> = ({
           edit: disableWrite,
           archive: disableWrite,
           view: !disableWrite,
+          export: !disableWrite,
         }}
+        ViewModal={ViewSaleModal}
       />
     </>
   );

@@ -31,7 +31,7 @@ export const invoiceService2 = createGenericService<InvoiceSchema>(
 );
 
 export const invoiceService = {
-  getInvoices: async (storeId: string): Promise<any> => {
+  getStoreInvoices: async (storeId: string): Promise<any> => {
     const q = query(invoiceInstanceRef, where('storeId', '==', storeId));
 
     const data = await getDocs(q);
@@ -151,6 +151,38 @@ export const invoiceService = {
     return mapData(data);
   },
 
+  getInvoiceCustomers: async (storeId: string): Promise<any> => {
+    const q = query(invoiceInstanceRef, where('storeId', '==', storeId));
+
+    const data = await getDocs(q);
+
+    return mapData(data);
+  },
+
+  getInvoiceAddress: async (storeId: string): Promise<any> => {
+    const q = query(invoiceInstanceRef, where('storeId', '==', storeId));
+
+    const data = await getDocs(q);
+    const invoiceData = mapData(data);
+
+    // extract and return only the customer names
+    const customerAddresses = invoiceData.map(
+      (invoice: any) => invoice.customerAddress
+    );
+    return customerAddresses;
+  },
+  getInvoiceContact: async (storeId: string): Promise<any> => {
+    const q = query(invoiceInstanceRef, where('storeId', '==', storeId));
+
+    const data = await getDocs(q);
+    const invoiceData = mapData(data);
+
+    // extract and return only the customer names
+    const customerContacts = invoiceData.map(
+      (invoice: any) => invoice.customerContact
+    );
+    return customerContacts;
+  },
   postOne: async (invoice: any): Promise<any> => {
     const { orderDetails, ...invoiceData } = invoice;
 

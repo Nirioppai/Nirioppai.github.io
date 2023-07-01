@@ -44,36 +44,41 @@ const StoresGrid: FC<PropsWithChildren<{ disableWrite?: boolean }>> = ({
             field: 'name',
             headerName: 'Name',
             sort: 'asc',
+            headerTooltip: 'Name',
             minWidth: 200,
             cellStyle: { fontWeight: 500 },
           },
           {
             field: 'address',
             headerName: 'Address',
-
+            headerTooltip: 'Address',
             minWidth: 200,
           },
           {
             field: 'name',
             headerName: 'Products',
+            headerTooltip: 'Products',
             valueGetter: ({ data }) => data?.products?.length || '0',
             minWidth: 100,
           },
           {
             field: 'name',
             headerName: 'Services',
+            headerTooltip: 'Services',
             valueGetter: ({ data }) => data?.services?.length || '0',
             minWidth: 100,
           },
-          {
-            field: 'name',
-            headerName: 'Product Categories',
-            valueGetter: ({ data }) => data?.productCategories?.length || '0',
-            minWidth: 100,
-          },
+          // {
+          //   field: 'name',
+          //   headerName: 'Product Categories',
+          //   headerTooltip: 'Product Categories',
+          //   valueGetter: ({ data }) => data?.productCategories?.length || '0',
+          //   minWidth: 100,
+          // },
           {
             field: 'name',
             headerName: 'Cashiers',
+            headerTooltip: 'Cashiers',
             valueGetter: ({ data }) => data?.cashiers?.length || '0',
             minWidth: 100,
           },
@@ -84,6 +89,7 @@ const StoresGrid: FC<PropsWithChildren<{ disableWrite?: boolean }>> = ({
           add: !disableWrite,
           edit: !disableWrite,
           archive: !disableWrite,
+          export: !disableWrite,
         }}
         onArchive={async (row) => await archiveEntry(row._id)}
         AddModal={AddStoreModal}

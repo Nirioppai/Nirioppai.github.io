@@ -50,8 +50,8 @@ const AddOwnerProductModal: FC<DialogProps> = ({ onClose, ...rest }) => {
       title='Add New Product'
       defaultValues={{
         ownerId: auth?.currentUser?.uid,
-        category: '',
         description: '',
+        category: '',
         stock: 0,
         availability: 'Available',
         // @ts-ignore

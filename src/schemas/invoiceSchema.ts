@@ -3,6 +3,7 @@ import { z } from 'zod';
 
 export const invoiceSchema = z.object({
   storeId: z.string(),
+  cashierId: z.string(),
   productSaleId: z.string(),
   serviceSaleId: z.string(),
   customerName: z.string(),
