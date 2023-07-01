@@ -8,6 +8,8 @@ import {
 } from 'mdi-material-ui';
 import { useQueries } from 'react-query';
 
+import ViewSaleModal from './ViewSaleModal';
+
 import { DynamicAgGrid } from '~/components';
 import { KEYS } from '~/constants';
 import { invoiceService } from '~/services';
@@ -128,7 +130,9 @@ const ProductSales: FC<PropsWithChildren<ProductSalesProps>> = ({
           edit: disableWrite,
           archive: disableWrite,
           export: !disableWrite,
+          view: !disableWrite,
         }}
+        ViewModal={ViewSaleModal}
       />
     </>
   );

@@ -130,7 +130,7 @@ const ViewSaleModal: FC<ViewSaleModalProps> = ({ data, onClose, ...rest }) => {
         Product Sale Details
       </Typography>
 
-      {displayProductDetails(data?.productSale)}
+      {data?.productSale ? displayProductDetails(data?.productSale) : ''}
     </Box>
   );
 
@@ -140,7 +140,7 @@ const ViewSaleModal: FC<ViewSaleModalProps> = ({ data, onClose, ...rest }) => {
         Service Sale Details
       </Typography>
 
-      {displayServiceDetails(data?.serviceSale)}
+      {data?.serviceSale ? displayServiceDetails(data?.serviceSale) : ''}
     </Box>
   );
 

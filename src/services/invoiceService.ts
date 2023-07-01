@@ -129,6 +129,7 @@ export const invoiceService = {
 
     return storesWithInvoices;
   },
+
   getServiceInvoices: async (storeId: string): Promise<any> => {
     const q = query(
       invoiceInstanceRef,
@@ -137,7 +138,34 @@ export const invoiceService = {
     );
 
     const data = await getDocs(q);
-    return mapData(data);
+    const invoices = mapData(data);
+
+    // Iterate over invoices and fetch corresponding productSales and serviceSales
+    const salesPromises = invoices.map(async (invoice: any) => {
+      // Fetch corresponding productSale
+      const productSaleDoc = doc(db, 'productSales', invoice.productSaleId);
+      const productSaleSnapshot = await getDoc(productSaleDoc);
+
+      // If the productSale exists, add it to the invoice
+      if (productSaleSnapshot.exists()) {
+        invoice.productSale = productSaleSnapshot.data();
+      }
+
+      // Fetch corresponding serviceSale
+      const serviceSaleDoc = doc(db, 'serviceSales', invoice.serviceSaleId);
+      const serviceSaleSnapshot = await getDoc(serviceSaleDoc);
+
+      // If the serviceSale exists, add it to the invoice
+      if (serviceSaleSnapshot.exists()) {
+        invoice.serviceSale = serviceSaleSnapshot.data();
+      }
+
+      return invoice;
+    });
+
+    const invoicesWithSales = await Promise.all(salesPromises);
+
+    return invoicesWithSales;
   },
 
   getProductInvoices: async (storeId: string): Promise<any> => {
@@ -148,7 +176,34 @@ export const invoiceService = {
     );
 
     const data = await getDocs(q);
-    return mapData(data);
+    const invoices = mapData(data);
+
+    // Iterate over invoices and fetch corresponding productSales and serviceSales
+    const salesPromises = invoices.map(async (invoice: any) => {
+      // Fetch corresponding productSale
+      const productSaleDoc = doc(db, 'productSales', invoice.productSaleId);
+      const productSaleSnapshot = await getDoc(productSaleDoc);
+
+      // If the productSale exists, add it to the invoice
+      if (productSaleSnapshot.exists()) {
+        invoice.productSale = productSaleSnapshot.data();
+      }
+
+      // Fetch corresponding serviceSale
+      const serviceSaleDoc = doc(db, 'serviceSales', invoice.serviceSaleId);
+      const serviceSaleSnapshot = await getDoc(serviceSaleDoc);
+
+      // If the serviceSale exists, add it to the invoice
+      if (serviceSaleSnapshot.exists()) {
+        invoice.serviceSale = serviceSaleSnapshot.data();
+      }
+
+      return invoice;
+    });
+
+    const invoicesWithSales = await Promise.all(salesPromises);
+
+    return invoicesWithSales;
   },
 
   getInvoiceCustomers: async (storeId: string): Promise<any> => {
